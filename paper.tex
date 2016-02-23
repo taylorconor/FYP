@@ -26,7 +26,7 @@ Other proof systems \cite{luo} deploy software on Wi-Fi access points. Access po
 	\item \textbf{Active and passive eavesdroppers.} An eavesdropper records and maybe modifies communication between users, proof- ssuers, or applications.
 \end{itemize}
 
-Distributed P2P location proof systems also exist \cite{khan}. A central authority is used and acts as a certificate authority, issuing a unique ID to each person using the system. Unique identity is proved by users by providing SSN, driver’s licence, or passport documents. This removes the threat of a Sybil attack, but makes the central authority a clear target for attack. The system uses three parties to provide location proofs; a mobile user who requests a proof, a fixed location authority, and a mobile user who acts as a witness. The system becomes vulnerable in the case where all three users collude, but is otherwise quite an interesting approach.
+Distributed P2P location proof systems also exist \cite{khan}. A central authority is used and acts as a certificate authority, issuing a unique ID to each person using the system. Unique identity is proved by users by providing SSN, driver’s licence, or passport documents. This removes the threat of a Sybil attack \cite{sybil}, but makes the central authority a clear target for attack. The system uses three parties to provide location proofs; a mobile user who requests a proof, a fixed location authority, and a mobile user who acts as a witness. The system becomes vulnerable in the case where all three users collude, but is otherwise quite an interesting approach.
 
 \cite{khan} also outlines a number of possible attacks on their system:
 \begin{itemize}
@@ -43,6 +43,63 @@ Distributed P2P location proof systems also exist \cite{khan}. A central authori
 \end{itemize}
 
 'OTIT' \cite{otit}, a model for designing secure location provenance, can be used to compare existing location proof systems. This model defines the following requirements necessary for designing any secure location provenance scheme: Chronological, Order Preserving, Vereifiable, Tamper Evident, Privacy Preserved, Selective In-Sequence Privacy, Privacy Protected Chronology, and Convenience \& Derivability.
+
+\section{Decentralised location proof system}
+This location proof system is comprised of a network of mobile nodes, capable of anonymously providing and receiving an alibi to/from other nodes on the network.
+
+When two nodes are in close physical proximity, they initiate a transaction with each other over a short range, ad-hoc network such as bluetooth. To create this transaction, they must agree on their current GPS coordinates and the current time. Once both nodes reach agreement on these parameters, they each create an encrypted transaction that claims their current time and location. This transaction must also contain references to both the alibi's identity, and the index of the node’s most recent transaction. Both nodes then publish their own transaction, indexed using their identity, onto a public append-only bulletin board/blockchain.
+
+A node can give verifiers permission to verify its location. The node will give the verifier access to the keys used to encrypt each of the node’s $n$ most recent transactions. After finding and decrypting the transactions, the 3rd party will decide based whether or not to accept the node's claimed location as truth.
+
+\subsection{Identities}
+In order to preserve user's privacy, a user will only ever use an identity for one transaction, before generating a new one. This prevents malicious users from watching the public blockchain for a known identity and tracking it. However, to prevent identity theft, it is important for the verifier to be able to prove that a node was the original creator of each identity. This is achieved using a public/private key pair for each node.
+
+When a node is created, it generates (or is provided with?) a certificate (or key pair). To maintain anonymoty, the node will use the public key to encrypt some nonces to create identities, and use these identify itself in a transaction. During the verification stage, the node will provide the verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions. The verifier calculates the node's identities using the public key and nonces, and retrieves the relevant transactions from the public blockchain. The verifier will also ensure that the node owns the private key associated with the provided public key, to prevent identity theft.
+
+\subsection{Transactions}
+During a transaction between two nodes, a number of different items must be shared and calculated. The first step in a transaction is for both nodes to agree upon a GPS location and current time. Nodes likely won't have the exact same GPS coordinates or time, but once the values don;t differ by more than some constant $\epsilon$, the nodes will continue with the transaction.
+
+After nodes agree upon the parameters of the transaction, they exchange their key packets with each other. A key packet is a list of the nodes $m$ most recent identities, along with the keys needed to decrypt them. This allows the verifier to check the credibility of each alibi the node seeking verification has collected.
+
+The following transaction data will be published onto the blockchain by node A:
+
+$T_{An} = ID_{An} | K_{A1n}(ID_{An-1}) | K_{A2n}(ts, loc, ID_{An}, ID_{An-1}, KP_{Bm})$
+
+\begin{itemize}
+	\item[] $\mathbf{ID_{An}}$: The current ID of node $A$.
+	\item[] $\mathbf{K_{A1n}(ID_{An-1})}$: Node $A$'s previous identity. This creates a backward link between $A$'s transactions, used to preserve the ``privacy protected chronology'' property of OTIT \cite{otit}. This is encrypted with a symmetric key $K_{A1n}$ to stop curious users monitoring the blockchain to track other users.
+	\item[] $\mathbf{K_{A2n}}$: Node $A$'s second current symmetric key at transaction $n$, used to encrypt the body of the transaction. This is separate from $K_{A1n}$ to preserve ``privacy protected chronology'' and ''selective in-sequence privacy'' \cite{otit}. 
+	\item[] $\mathbf{ts}$: The agreed timestamp.
+	\item[] $\mathbf{loc}$: The agreed GPS coordinates.
+	\item[] $\mathbf{ID_{An} and ID_(An-1)}$:  Node $A$'s current identity and most recent identity respectively, encrypted with $K_{An}$. These are used to prevent a possible identity theft attack whereby a malicious man-in-the-middle may try to alter the ID attached to the transaction.
+	\item[] $\mathbf{KP_{Bm}}$: Node $B$'s key packet at transaction $m$ (relative to $B$). This contains $B$'s $n$ most recent transaction keys, so any verifier that node $A$ requests will be able to validate the credibility of alibi $B$ by decrypting his transactions. 
+\end{itemize}
+
+The key packet is more than simply a list of keys that $B$ has used to encrypt his transactions; in order to preserve the ``privacy preserved'' property of OTIT \cite{otit}, a user must be able to choose transactions that he doesn't want others to be able to decrypt. For this reason, the transaction backwards-chaining may need to be broken. For example, if node $B$ doesn't want to reveal transaction $T_{Bm-3}$, he would reveal the following key packet:
+
+$KP_{Bm} = (\{ID_{Bm}, K_{Bm}\}, K_{Bm-1}, K_{Bm-2}, \{ID_{Bm-4}, K_{Bm-4}\}, K_{Bm-5}, \ldots, K_{Bm-n})$
+\\
+\\
+\indent
+In this case, $ID_{Bm-4}$ is needed along with $K_{Bm-4}$ so the verifier knows at which ID the privacy-protected chain will become unprotected, and can be decrypted.
+
+\subsection{Verification}
+The verification stage is the most algorithmically complex part of the system. It is performed by the verifier. Given the keys for a node's $n$ most recent transactions, the verifier will walk chronologically backwards along the public location proof chain. At each transaction encountered, the search will fork along the proof history path of both parties involved in that transaction, and continue until all available transactions have been exhausted.
+
+The goal of the verification stage is to either accept or reject the location that the user is claiming. There are a huge number of factors involved in reaching a conclusion from the data on the blockchain; some of these factors will likely be unique to certain verifiers, and kept secret to improve reliability. Some simple example factors may include:
+\begin{itemize}
+	\item \textbf{Alibi credibility:} if each of the node’s alibi’s have little or no alibi’s themselves, then the node is likely attempting a poorly-constructed Sybil attack, and the verifier will reject his verification request.
+	\item \textbf{Alibi reuse:} if the verifier can prove that alibi’s are being reused frequently, then it will reject the verification request.
+	\begin{itemize}
+		\item Due to transaction anonymity, the verifier may not always be able to tell if two alibi's are the same person or not. e.g. node $A$ could use node $B$ as an alibi, then wait for $B$ to complete $n$ more transactions, then use node $B$ again.
+		\item This is not a viable attack on the verification system. Depending on the size of $n$, enough time may pass between both uses of node $B$ as an alibi that the transactions are no longer relevant.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Sybil attack}
+Currently there is no provably correct way of preventing a Sybil attack, where a single physical node may create multiple \textit{pseudoidentities} \cite{sybil}. A suitably powerful node, or motivated attacker, could create enough pseudonyms to create a subnetwork of nodes, each creating malicious transactions with each other. This would allow an attacker to falsify a believable location proof.
+
+A web of trust may be used to establish a trust rating between known nodes in the network. When two nodes meet and create a transaction, they will also publish a separate entry into the blockchain, signing each others keys. When a verifier is walking the location proof graph of a node seeking verification, it will establish a trust rating for each alibi node it encounters. Anomolies in the trust rating (for example if the trust ratings for most alibis are dependent on a small subset of nodes) will reveal attempted Sybil attacks, and the verifier can choose to reject the proof request. \textbf{How can this be done without revealing the public keys of each node involved in a transaction (thus opening them up for tracking)?}.
 
 \section{Results}
 
@@ -73,6 +130,12 @@ Distributed P2P location proof systems also exist \cite{khan}. A central authori
   Khan, R., Zawoad, S., Haque, M., Hasan, R.
   ``OTIT: Towards secure provenance modeling for location proofs'',
   Proc. of ASIACCS. ACM (2014)
+
+\bibitem{sybil}
+  Douceur, J.R.,
+  ``The sybil attack'',
+  Druschel, P., Kaashoek, M.F., Rowstron, A. (eds.) IPTPS 2002. LNCS, vol. 2429, pp. 251–260,
+  Springer, Heidelberg (2002)
 
 \end{thebibliography}
 
