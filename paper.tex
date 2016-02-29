@@ -97,9 +97,9 @@ The goal of the verification stage is to either accept or reject the location th
 \end{itemize}
 
 \subsection{Sybil attack}
-Currently there is no provably correct way of preventing a Sybil attack, where a single physical node may create multiple \textit{pseudoidentities} \cite{sybil}. A suitably powerful node, or motivated attacker, could create enough pseudonyms to create a subnetwork of nodes, each creating malicious transactions with each other. This would allow an attacker to falsify a believable location proof.
+This system is vulnerable to a Sybil attack, where a single physical node may create multiple \textit{pseudoidentities} \cite{sybil}. A suitably powerful node, or motivated attacker, could create enough pseudonyms to create a subnetwork of nodes, each creating malicious transactions with each other. This would allow an attacker to falsify a believable location proof.
 
-A web of trust may be used to establish a trust rating between known nodes in the network. When two nodes meet and create a transaction, they will also publish a separate entry into the blockchain, signing each others keys. When a verifier is walking the location proof graph of a node seeking verification, it will establish a trust rating for each alibi node it encounters. Anomolies in the trust rating (for example if the trust ratings for most alibis are dependent on a small subset of nodes) will reveal attempted Sybil attacks, and the verifier can choose to reject the proof request. \textbf{How can this be done without revealing the public keys of each node involved in a transaction (thus opening them up for tracking)?}.
+It has been proven that a central certificate authority is the only method of preventing a Sybil attack \cite{sybil}. Other measures, such as web of trust, increase the difficulty involved in performing an attack, but the system remains vulnerable to a motivated attacker.
 
 \section{Results}
 
