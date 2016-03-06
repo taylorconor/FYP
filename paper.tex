@@ -2,6 +2,10 @@
 
 \documentclass[12pt]{article}
 
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows}
+\usepackage{enumitem}
+
 \begin{document}
 \maketitle
 
@@ -44,12 +48,13 @@ Distributed P2P location proof systems also exist \cite{khan}. A central authori
 
 'OTIT' \cite{otit}, a model for designing secure location provenance, can be used to compare existing location proof systems. This model defines the following requirements necessary for designing any secure location provenance scheme: Chronological, Order Preserving, Vereifiable, Tamper Evident, Privacy Preserved, Selective In-Sequence Privacy, Privacy Protected Chronology, and Convenience \& Derivability.
 
-\section{Decentralised location proof system}
-This location proof system is comprised of a network of mobile nodes, capable of anonymously providing and receiving an alibi to/from other nodes on the network.
+\newpage
+\section{Design}
+The location proof system we propose allows mobile nodes to create location proofs for each other after physically meeting. When two nodes are in close physical proximity, they initiate a transaction over a short range, ad-hoc network such as bluetooth.
 
-When two nodes are in close physical proximity, they initiate a transaction with each other over a short range, ad-hoc network such as bluetooth. To create this transaction, they must agree on their current GPS coordinates and the current time. Once both nodes reach agreement on these parameters, they each create an encrypted transaction that claims their current time and location. This transaction must also contain references to both the alibi's identity, and the index of the node’s most recent transaction. Both nodes then publish their own transaction, indexed using their identity, onto a public append-only bulletin board/blockchain.
+To create a transaction, two nodes anonymously agree upon their location and current time over a short-range network. Once both nodes agree upon these parameters, they each create an encrypted, privacy-protecting transaction logging their location and the alibi used to create the transaction. This transaction is published onto a public, append-only bulletin board known as a \textit{blockchain}. Once given permission and decryption keys from a node, a \textit{verifier} can determine whether or not the node is present at its claimed location.
 
-A node can give verifiers permission to verify its location. The node will give the verifier access to the keys used to encrypt each of the node’s $n$ most recent transactions. After finding and decrypting the transactions, the 3rd party will decide based whether or not to accept the node's claimed location as truth.
+Any node acting as an alibi in a transaction will share details of its most recent transactions with the other node in the transaction. This allows the verifier to be given permission to check the authenticity of all recent alibi's, and each of the alibi's recent alibi's, etc. Only the owner of the transaction can give permission to a verifier to check its location history, by providing the verifier with the keys needed to decrypt the transactions.
 
 \subsection{Identities}
 In order to preserve user's privacy, a user will only ever use an identity for one transaction, before generating a new one. This prevents malicious users from watching the public blockchain for a known identity and tracking it. However, to prevent identity theft, it is important for the verifier to be able to prove that a node was the original creator of each identity. This is achieved using a public/private key pair for each node.
@@ -57,31 +62,53 @@ In order to preserve user's privacy, a user will only ever use an identity for o
 When a node is created, it generates (or is provided with?) a certificate (or key pair). To maintain anonymoty, the node will use the public key to encrypt some nonces to create identities, and use these identify itself in a transaction. During the verification stage, the node will provide the verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions. The verifier calculates the node's identities using the public key and nonces, and retrieves the relevant transactions from the public blockchain. The verifier will also ensure that the node owns the private key associated with the provided public key, to prevent identity theft.
 
 \subsection{Transactions}
-During a transaction between two nodes, a number of different items must be shared and calculated. The first step in a transaction is for both nodes to agree upon a GPS location and current time. Nodes likely won't have the exact same GPS coordinates or time, but once the values don;t differ by more than some constant $\epsilon$, the nodes will continue with the transaction.
+During a transaction between two nodes, a number of different items must be shared and calculated. Figure \ref{fig:transaction} describes an honest, successful transaction.
 
-After nodes agree upon the parameters of the transaction, they exchange their key packets with each other. A key packet is a list of the nodes $m$ most recent identities, along with the keys needed to decrypt them. This allows the verifier to check the credibility of each alibi the node seeking verification has collected.
+\begin{figure}[h]
+\resizebox {\columnwidth} {!} {\input{diagrams/transaction.tex}}
+\caption{Honest, successful transaction}
+\label{fig:transaction}
+\end{figure}
 
-The following transaction data will be published onto the blockchain by node A:
+When a node is initialised, it must begin to record two \textit{Key Lists} for itself. A \textit{Key List} is a list of encryption keys previously used for transactions. For example, $KL_{A1}[n]$ and $KL_{A2}[n]$ are the two keys used to encrypt node $A$'s $n$th transaction and matching chronological link, respectively. These \textit{Key Lists} and are assumed to have been at least initialised (if not already populated) before the transaction described in Figure \ref{fig:transaction} begins.
 
-$T_{An} = ID_{An} | K_{A1n}(ID_{An-1}) | K_{A2n}(ts, loc, ID_{An}, ID_{An-1}, KP_{Bm})$
+After creating an ad-hoc bluetooth network between nodes $A$ and $B$, the first step in the transaction is for both nodes to share their IDs, and agree upon a GPS location and current time. Nodes likely won't share the exact same GPS coordinates or time, but once the values don't differ by more than some small constant $\epsilon$, the nodes will continue with the transaction. If node $A$ claims a GPS location or timestamp that differs from what node $B$ senses by more than $\epsilon$, node $B$ will abort the transaction.
 
-\begin{itemize}
-	\item[] $\mathbf{ID_{An}}$: The current ID of node $A$.
-	\item[] $\mathbf{K_{A1n}(ID_{An-1})}$: Node $A$'s previous identity. This creates a backward link between $A$'s transactions, used to preserve the ``privacy protected chronology'' property of OTIT \cite{otit}. This is encrypted with a symmetric key $K_{A1n}$ to stop curious users monitoring the blockchain to track other users.
-	\item[] $\mathbf{K_{A2n}}$: Node $A$'s second current symmetric key at transaction $n$, used to encrypt the body of the transaction. This is separate from $K_{A1n}$ to preserve ``privacy protected chronology'' and ''selective in-sequence privacy'' \cite{otit}. 
-	\item[] $\mathbf{ts}$: The agreed timestamp.
-	\item[] $\mathbf{loc}$: The agreed GPS coordinates.
-	\item[] $\mathbf{ID_{An} and ID_(An-1)}$:  Node $A$'s current identity and most recent identity respectively, encrypted with $K_{An}$. These are used to prevent a possible identity theft attack whereby a malicious man-in-the-middle may try to alter the ID attached to the transaction.
-	\item[] $\mathbf{KP_{Bm}}$: Node $B$'s key packet at transaction $m$ (relative to $B$). This contains $B$'s $n$ most recent transaction keys, so any verifier that node $A$ requests will be able to validate the credibility of alibi $B$ by decrypting his transactions. 
+After nodes agree upon the parameters of the transaction, they exchange their previous ID, along with their \textit{Key Packets}. A \textit{Key Packet} is a list of keys used in a node's $n$ most recent transactions, along with the transaction ID's if necessary. This allows node $A$ to decrypt node $B$'s $m$ most recent transactions, therefore providing an alibi for node $A$.
+
+\subsubsection{Transaction creation}
+Once nodes have exchanged \textit{Key Packets}, their communication is finished and they can close their ad-hoc channel. Each node creates a new transaction object, $T$, to publish onto the public blockchain. The following transaction data will be calculated by node $A$, after communicating with node $B$:
+\\
+
+$T_{An} = KL_{AT}[n](ts|loc|ID_{An}|KP_{Bm})$
+\\
+
+Where:
+\begin{itemize}[noitemsep,topsep=0pt]
+	\item[] $\mathbf{n}$ is node $A$'s current transaction number (i.e. $A$ has published $n-1$ transactions before now).
+	\item[] $\mathbf{ts}$ is the timestamp of the transaction, as recorded by node $A$.
+	\item[] $\mathbf{loc}$ is the GPS coordinates of the transaction, as recorded by node $A$.
+	\item[] $\mathbf{KL_{AT}}$ is one of $A$'s \textit{Key Lists}, used to encrypt transactions.
 \end{itemize}
 
-The key packet is more than simply a list of keys that $B$ has used to encrypt his transactions; in order to preserve the ``privacy preserved'' property of OTIT \cite{otit}, a user must be able to choose transactions that he doesn't want others to be able to decrypt. For this reason, the transaction backwards-chaining may need to be broken. For example, if node $B$ doesn't want to reveal transaction $T_{Bm-3}$, he would reveal the following key packet:
+\subsubsection{Publishing to the blockchain}
+After creating $T_{An}$, node $A$ needs to publish it to the public blockchain. The data published must be identifiablein order to provide a verifier with some way of identifying specific transactions. Nodes will use their current ID as the identifier for the transaction.
 
-$KP_{Bm} = (\{ID_{Bm}, K_{Bm}\}, K_{Bm-1}, K_{Bm-2}, \{ID_{Bm-4}, K_{Bm-4}\}, K_{Bm-5}, \ldots, K_{Bm-n})$
+Backwards-chaining is an important part of verifiability. The verifier must be able to prove that the proof chain provided by the node has not had its order altered. The transaction must therefore be accompanied by a link to the node's chronologically previous transaction. This link must be encrypted, otherwise a malicious user monitoring the public blockchain could monitor a user's transaction publishing activity. $A$'s copy of the transaction log $P_{An}$ will therefore be in the form:
+
+$P_An = ID_{An}|KL_{AL}[n](ID_{An-1})|T_{An}$
+
+To publish $P_{An}$, $A$ must send $P_{An}$ to a miner node, who will add it to its \textit{pending transaction} queue, and send it to other miners in the network to add it to their queues as well. The transaction will then be signed into the next block in the blockchain.
+
+\subsubsection{Key Packets}
+The key packet is more than simply a list of keys that $B$ has used to encrypt his transactions; in order to preserve the ``privacy preserved'' property of OTIT \cite{otit}, a user must be able to choose transactions that he doesn't want others to be able to decrypt. However, in order to simultaneously preserve OTIT's ``provacy protected chronology'' property, the transaction backwards-chaining must not be broken. This is why two separate \textit{Key Lists} are maintained; $KL_{A1}$ is used to encrypt the backwards-chaining link, while $KL_{A2}$ encrypts the transaction data. For example, if node $B$ doesn't want to reveal transaction $T_{Bm-1}$, he would reveal the following key packet:
 \\
-\\
-\indent
-In this case, $ID_{Bm-4}$ is needed along with $K_{Bm-4}$ so the verifier knows at which ID the privacy-protected chain will become unprotected, and can be decrypted.
+
+\noindent
+$KP_{Bm} = (\{KL_{BL}[m], KL_{BT}[m]\}, KL_{BL}[m-1], \{KL_{BL}[m-2], KL_{BT}[m-2]\}, \ldots, \{KL_{BL}[m-n], KL_{BT}[m-n]\})$
+
+\null
+In this case, $KL_{BT}[m-1]$ has not been included with $KL_{BL}[m-1]$, in order to protect the privacy of this transaction. This may be needed, for example, if node $B$ doesn't want to allow anyone to decrypt any transactions he has created withing 5Km of his home, in order to protect his privacy.
 
 \subsection{Verification}
 The verification stage is the most algorithmically complex part of the system. It is performed by the verifier. Given the keys for a node's $n$ most recent transactions, the verifier will walk chronologically backwards along the public location proof chain. At each transaction encountered, the search will fork along the proof history path of both parties involved in that transaction, and continue until all available transactions have been exhausted.
@@ -136,6 +163,12 @@ It has been proven that a central certificate authority is the only method of pr
   ``The sybil attack'',
   Druschel, P., Kaashoek, M.F., Rowstron, A. (eds.) IPTPS 2002. LNCS, vol. 2429, pp. 251–260,
   Springer, Heidelberg (2002)
+
+\bibitem{location-spoof}
+  N. O. Tippenhauer, K. B. Rasmussen, C. Popper, and S. Capkun,
+  ``iPhone and iPod location spoofing: Attacks on public WLAN-based positioning systems'',
+  SysSec Technical Report,
+  ETH Zurich, April, 2008
 
 \end{thebibliography}
 
