@@ -5,6 +5,7 @@
 \usepackage{tikz}
 \usetikzlibrary{calc,arrows}
 \usepackage{enumitem}
+\usepackage{float}
 
 \begin{document}
 \maketitle
@@ -59,7 +60,9 @@ Any node acting as an alibi in a transaction will share details of its most rece
 \subsection{Identities}
 In order to preserve user's privacy, a user will only ever use an identity for one transaction, before generating a new one. This prevents malicious users from watching the public blockchain for a known identity and tracking it. However, to prevent identity theft, it is important for the verifier to be able to prove that a node was the original creator of each identity. This is achieved using a public/private key pair for each node.
 
-When a node is created, it generates (or is provided with?) a certificate (or key pair). To maintain anonymoty, the node will use the public key to encrypt some nonces to create identities, and use these identify itself in a transaction. During the verification stage, the node will provide the verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions. The verifier calculates the node's identities using the public key and nonces, and retrieves the relevant transactions from the public blockchain. The verifier will also ensure that the node owns the private key associated with the provided public key, to prevent identity theft.
+% add nonces and PK verification to the verify_request diagram! and discuss them below!
+
+When a node is created, it generates a key pair. To maintain anonymoty, the node will use the public key to encrypt some nonces to create identities, and use these identify itself in a transaction. During the verification stage, the node will provide the verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions. The verifier calculates the node's identities using the public key and nonces, and retrieves the relevant transactions from the public blockchain. The verifier will also ensure that the node owns the private key associated with the provided public key, to prevent identity theft.
 
 \subsection{Transactions}
 During a transaction between two nodes, a number of different items must be shared and calculated. Figure \ref{fig:transaction} describes an honest, successful transaction.
@@ -70,7 +73,7 @@ During a transaction between two nodes, a number of different items must be shar
 \label{fig:transaction}
 \end{figure}
 
-When a node is initialised, it must begin to record two \textit{Key Lists} for itself. A \textit{Key List} is a list of encryption keys previously used for transactions. For example, $KL_{A1}[n]$ and $KL_{A2}[n]$ are the two keys used to encrypt node $A$'s $n$th transaction and matching chronological link, respectively. These \textit{Key Lists} and are assumed to have been at least initialised (if not already populated) before the transaction described in Figure \ref{fig:transaction} begins.
+When a node is initialised, it must begin to record two \textit{Key Lists} for itself. A \textit{Key List} is a list of encryption keys previously used for transactions. For example, $KL_{AT}[n]$ and $KL_{AL}[n]$ are the two keys used to encrypt node $A$'s $n$th transaction and matching chronological link, respectively. These \textit{Key Lists} and are assumed to have been at least initialised (if not already populated) before the transaction described in Figure \ref{fig:transaction} begins.
 
 After creating an ad-hoc bluetooth network between nodes $A$ and $B$, the first step in the transaction is for both nodes to share their IDs, and agree upon a GPS location and current time. Nodes likely won't share the exact same GPS coordinates or time, but once the values don't differ by more than some small constant $\epsilon$, the nodes will continue with the transaction. If node $A$ claims a GPS location or timestamp that differs from what node $B$ senses by more than $\epsilon$, node $B$ will abort the transaction.
 
@@ -89,6 +92,7 @@ Where:
 	\item[] $\mathbf{ts}$ is the timestamp of the transaction, as recorded by node $A$.
 	\item[] $\mathbf{loc}$ is the GPS coordinates of the transaction, as recorded by node $A$.
 	\item[] $\mathbf{KL_{AT}}$ is one of $A$'s \textit{Key Lists}, used to encrypt transactions.
+	\item[] $\mathbf{KP_{Bm}}$ is $B$'s \textit{Key Packet} at time $m$. Its exact contents are discussed in more detail in section \ref{sssec:key_packets}
 \end{itemize}
 
 \subsubsection{Publishing to the blockchain}
@@ -96,24 +100,45 @@ After creating $T_{An}$, node $A$ needs to publish it to the public blockchain. 
 
 Backwards-chaining is an important part of verifiability. The verifier must be able to prove that the proof chain provided by the node has not had its order altered. The transaction must therefore be accompanied by a link to the node's chronologically previous transaction. This link must be encrypted, otherwise a malicious user monitoring the public blockchain could monitor a user's transaction publishing activity. $A$'s copy of the transaction log $P_{An}$ will therefore be in the form:
 
-$P_An = ID_{An}|KL_{AL}[n](ID_{An-1})|T_{An}$
+$P_{An} = ID_{An}|KL_{AL}[n](ID_{An-1})|T_{An}$
 
 To publish $P_{An}$, $A$ must send $P_{An}$ to a miner node, who will add it to its \textit{pending transaction} queue, and send it to other miners in the network to add it to their queues as well. The transaction will then be signed into the next block in the blockchain.
 
-\subsubsection{Key Packets}
+\subsubsection{Key Packets} \label{sssec:key_packets}
 The key packet is more than simply a list of keys that $B$ has used to encrypt his transactions; in order to preserve the ``privacy preserved'' property of OTIT \cite{otit}, a user must be able to choose transactions that he doesn't want others to be able to decrypt. However, in order to simultaneously preserve OTIT's ``provacy protected chronology'' property, the transaction backwards-chaining must not be broken. This is why two separate \textit{Key Lists} are maintained; $KL_{A1}$ is used to encrypt the backwards-chaining link, while $KL_{A2}$ encrypts the transaction data. For example, if node $B$ doesn't want to reveal transaction $T_{Bm-1}$, he would reveal the following key packet:
 \\
 
 \noindent
-$KP_{Bm} = (\{KL_{BL}[m], KL_{BT}[m]\}, KL_{BL}[m-1], \{KL_{BL}[m-2], KL_{BT}[m-2]\}, \ldots, \{KL_{BL}[m-n], KL_{BT}[m-n]\})$
+${KP_{Bm} = (\{KL_{BL}[m], KL_{BT}[m]\}, KL_{BL}[m-1], \{KL_{BL}[m-2], KL_{BT}[m-2]\})}$
 
 \null
 In this case, $KL_{BT}[m-1]$ has not been included with $KL_{BL}[m-1]$, in order to protect the privacy of this transaction. This may be needed, for example, if node $B$ doesn't want to allow anyone to decrypt any transactions he has created withing 5Km of his home, in order to protect his privacy.
 
 \subsection{Verification}
-The verification stage is the most algorithmically complex part of the system. It is performed by the verifier. Given the keys for a node's $n$ most recent transactions, the verifier will walk chronologically backwards along the public location proof chain. At each transaction encountered, the search will fork along the proof history path of both parties involved in that transaction, and continue until all available transactions have been exhausted.
+\begin{minipage}{0.5\linewidth}
+In the verification stage, a node tries to prove its location to a Verifier 3rd party, e.g. a bank. To do this, the node sends the Verifier a number of parameters, as shown in Figure \ref{fig:verify_request}:
+\begin{itemize}[noitemsep,topsep=0pt]
+	\item[] $\mathbf{ID_{An-1}}$ is the ID of $A$'s most recently published transaction.
+	\item[] $\mathbf{KP_{An-1}}$ is $A$'s key packet from transaction $n-1$, and includes keys for as many transactions as $A$ feels is apropriate in order to receive verification.
+	\item[] $\mathbf{loc}$ is $A$'s current claimed location for which it is seeking verification.
+	\item[] $\mathbf{NP_{An-1}}$ is $A$'s \textit{Nonce Packet}, a list of the nonces used to generate $A$'s most recent IDs, from $n-1$.	
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.5\linewidth}
+\begin{figure}[H]
+\input{diagrams/verify_request.tex}
+\caption{Verification request}
+\label{fig:verify_request}
+\end{figure}
+\end{minipage}
 
-The goal of the verification stage is to either accept or reject the location that the user is claiming. There are a huge number of factors involved in reaching a conclusion from the data on the blockchain; some of these factors will likely be unique to certain verifiers, and kept secret to improve reliability. Some simple example factors may include:
+
+The goal of the verification stage is for the Verifier to either accept or reject the location that the user is claiming. Given $ID_{An-1}$ and $KP_{An-1}$, a Verifier is able to retrieve $A$'s previous transactions, and the transactions of all of its alibi's.
+
+The Verifier uses $NP_{An-1}$ and $K^{+}_A$ to prove that node $A$ was the author of all of the transactions he claims to be. This prevents a collusion attack whereby nodes could share common transactions between different proof chains. When walking chronologically backwards along $A$'s proof chain, the 3rd party will ensure that the ID used in transaction $m$ on the proof chain matches $K^{+}_A(NP_{An-1}[m])$.
+
+There are a huge number of possible factors involved in reaching a conclusion from the data on the blockchain; some of these factors will likely be unique to certain verifiers, and kept secret to improve reliability and avoid gaming. Some simple example factors may include:
 \begin{itemize}
 	\item \textbf{Alibi credibility:} if each of the node’s alibi’s have little or no alibi’s themselves, then the node is likely attempting a poorly-constructed Sybil attack, and the verifier will reject his verification request.
 	\item \textbf{Alibi reuse:} if the verifier can prove that alibi’s are being reused frequently, then it will reject the verification request.
