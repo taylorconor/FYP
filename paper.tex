@@ -65,7 +65,7 @@ In order to preserve user's privacy, a user will only ever use an identity for o
 When a node is created, it generates a key pair. To maintain anonymoty, the node will use the public key to encrypt some nonces to create identities, and use these identify itself in a transaction. During the verification stage, the node will provide the verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions. The verifier calculates the node's identities using the public key and nonces, and retrieves the relevant transactions from the public blockchain. The verifier will also ensure that the node owns the private key associated with the provided public key, to prevent identity theft.
 
 \subsection{Transactions}
-During a transaction between two nodes, a number of different items must be shared and calculated. Figure \ref{fig:transaction} describes an honest, successful transaction.
+During a transaction between two nodes, a number of different items must be shared and calculated. Figure \ref{fig:transaction} describes an honest, successful transaction, assuming an ad-hoc bluetooth network has already been set up between nodes $A$ and $B$.
 
 \begin{figure}[h]
 \resizebox {\columnwidth} {!} {\input{diagrams/transaction.tex}}
@@ -73,6 +73,12 @@ During a transaction between two nodes, a number of different items must be shar
 \label{fig:transaction}
 \end{figure}
 
+Where:
+\begin{itemize}[noitemsep,topsep=0pt]
+	\item[] $\mathbf{NL_A[n]}$ is the $n$th nonce in $A$'s \textit{Nonce List}, which is used to generate $ID_{An}$.
+\end{itemize}
+
+\null
 When a node is initialised, it must begin to record two \textit{Key Lists} for itself. A \textit{Key List} is a list of encryption keys previously used for transactions. For example, $KL_{AT}[n]$ and $KL_{AL}[n]$ are the two keys used to encrypt node $A$'s $n$th transaction and matching chronological link, respectively. These \textit{Key Lists} and are assumed to have been at least initialised (if not already populated) before the transaction described in Figure \ref{fig:transaction} begins.
 
 After creating an ad-hoc bluetooth network between nodes $A$ and $B$, the first step in the transaction is for both nodes to share their IDs, and agree upon a GPS location and current time. Nodes likely won't share the exact same GPS coordinates or time, but once the values don't differ by more than some small constant $\epsilon$, the nodes will continue with the transaction. If node $A$ claims a GPS location or timestamp that differs from what node $B$ senses by more than $\epsilon$, node $B$ will abort the transaction.
@@ -99,20 +105,32 @@ Where:
 After creating $T_{An}$, node $A$ needs to publish it to the public blockchain. The data published must be identifiablein order to provide a verifier with some way of identifying specific transactions. Nodes will use their current ID as the identifier for the transaction.
 
 Backwards-chaining is an important part of verifiability. The verifier must be able to prove that the proof chain provided by the node has not had its order altered. The transaction must therefore be accompanied by a link to the node's chronologically previous transaction. This link must be encrypted, otherwise a malicious user monitoring the public blockchain could monitor a user's transaction publishing activity. $A$'s copy of the transaction log $P_{An}$ will therefore be in the form:
+\\
 
 $P_{An} = ID_{An}|KL_{AL}[n](ID_{An-1})|T_{An}$
 
+\null
 To publish $P_{An}$, $A$ must send $P_{An}$ to a miner node, who will add it to its \textit{pending transaction} queue, and send it to other miners in the network to add it to their queues as well. The transaction will then be signed into the next block in the blockchain.
 
 \subsubsection{Key Packets} \label{sssec:key_packets}
 The key packet is more than simply a list of keys that $B$ has used to encrypt his transactions; in order to preserve the ``privacy preserved'' property of OTIT \cite{otit}, a user must be able to choose transactions that he doesn't want others to be able to decrypt. However, in order to simultaneously preserve OTIT's ``provacy protected chronology'' property, the transaction backwards-chaining must not be broken. This is why two separate \textit{Key Lists} are maintained; $KL_{A1}$ is used to encrypt the backwards-chaining link, while $KL_{A2}$ encrypts the transaction data. For example, if node $B$ doesn't want to reveal transaction $T_{Bm-1}$, he would reveal the following key packet:
 \\
 
-\noindent
 ${KP_{Bm} = (\{KL_{BL}[m], KL_{BT}[m]\}, KL_{BL}[m-1], \{KL_{BL}[m-2], KL_{BT}[m-2]\})}$
 
 \null
 In this case, $KL_{BT}[m-1]$ has not been included with $KL_{BL}[m-1]$, in order to protect the privacy of this transaction. This may be needed, for example, if node $B$ doesn't want to allow anyone to decrypt any transactions he has created withing 5Km of his home, in order to protect his privacy.
+
+\subsubsection{Aborting transactions}
+A node may decide to abort a transaction if it thinks it is in contact with a malicious node. In figure \ref{fig:aborted_transaction}, node $A$ encounters a malicious node $M$, who tries to spoof its identity with $A$. Node $A$ will abort the transaction once it notices that $|ts_A-ts_M| < \epsilon_{ts}$, or $|loc_A-loc_M| < \epsilon_{loc}$.
+
+To abort the transaction, $A$ terminates the ad-hoc network with node $M$, and won't publish anything onto the blockchain. This means that even if $M$ fabricates some data from $A$ and publishes a transaction onto the blockchain, the matching transaction from $A$ will not be present. Any transaction on the blockchain that does not reference the transaction of the alibi used to create it will be disregarded by any Verifiers.
+
+\begin{figure}[h]
+\resizebox {\columnwidth} {!} {\input{diagrams/aborted_transaction.tex}}
+\caption{An aborted transaction due to malicious node $M$}
+\label{fig:aborted_transaction}
+\end{figure}
 
 \subsection{Verification}
 \begin{minipage}{0.5\linewidth}

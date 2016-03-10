@@ -1,0 +1,39 @@
+\begin{tikzpicture}
+\coordinate (A_1) at (0,5.5);
+\coordinate (A_2) at (0,5.25);
+\coordinate (A_3) at (0,4.5);
+\coordinate (A_8) at (0,1);
+\coordinate (A_9) at (0,0.25);
+\coordinate (A_12) at (0,0);
+\coordinate (AF_L) at (-0.25,0);
+\coordinate (AF_R) at (0.25,0);
+
+\coordinate (B_1) at (8,5.5);
+\coordinate (B_3) at (8,4.5);
+\coordinate (B_8) at (8,3.25);
+\coordinate (B_9) at (8,2.5);
+\coordinate (B_12) at (8,0);
+
+\draw[thick] (A_1)--(A_2) (A_3)--(A_8) (A_9)--(A_12) (AF_L)--(AF_R);
+\draw[thick] (B_1)--(B_3) (B_3)--(B_9) (B_9)--(B_12);
+\draw (A_1) node[above]{\Large Node $A$};
+\draw (B_1) node[above]{\Large Malicious node $M$};
+
+\draw (A_2) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{generate $NL_A[n]$, $ID_{An} = K^{+}_A(NL_A[n])$}}
+\end{tabular}};
+
+\coordinate (AX_1) at ($(A_3)-(0,0.5)$);
+\coordinate (BX_1) at ($(B_3)-(0,1)$);
+\draw[->] (AX_1) -- (BX_1) node[midway,below]
+	{$T_{req}$: $ID_{An} | ts_A | loc_A$};
+
+\coordinate (AX_2) at ($(A_3)-(0,3)$);
+\coordinate (BX_2) at ($(B_8)-(0,1)$);
+\draw[->] (BX_2) -- (AX_2) node[midway,below]
+	{$T_{res}$: $ID_{M} | ts_M | loc_M$};
+	
+\draw (A_8) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{verify $|ts_A-ts_M| < \epsilon_{ts}$, $|loc_A-loc_M| < \epsilon_{loc}$}}
+\end{tabular}};
+\end{tikzpicture}
