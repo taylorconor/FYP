@@ -1,0 +1,26 @@
+\begin{tikzpicture}
+\coordinate (A_T) at (0,3);
+\coordinate (A_B) at (0,0);
+\coordinate (A_1) at (0,2.25);
+\coordinate (A_2) at (0,1.5);
+\coordinate (A_3) at (0,0.25);
+
+\coordinate (B_T) at (7,3);
+\coordinate (B_B) at (7,0);
+\coordinate (B_1) at (7,2.5);
+\coordinate (B_2) at (7,1.25);
+\coordinate (B_3) at (7,0.5);
+
+\draw[thick] (A_T)--(A_B);
+\draw[thick] (B_T)--(B_B);
+\draw (A_T) node[above]{\Large User};
+\draw (B_T) node[above]{\Large AP};
+
+\draw[->] (B_1) -- (A_1) node[midway,below] {$n_{ap}$};
+\draw[->] (A_2) -- (B_2) node[midway,below]
+	{$H = hash(S_{user}(n_{user} || n_{ap}) || n_{user})$};
+	
+\draw[->] (B_3) -- (A_3) node[text width=5cm,midway,below]
+	{$H || location || time || n_{AP} ||$\\
+	$S_{group}(H || location || time || n_{AP})$};
+\end{tikzpicture}
