@@ -1,0 +1,45 @@
+\section{Evaluation}
+In this paper, we have presented a model for a location proof system which aims to preserve privacy and prevent false proofs from being created.
+
+\subsection{OTIT conformance}
+We can compare our model to OTIT \cite{otit}, a list of features and requirements necessary for designing any secure location proof scheme. OTIT presents 8 such requirements:
+\begin{enumerate}
+\item[] \textbf{Chronological}: The chronological property of OTIT ensures that transactions are published in the order they were created. In our system we do not enforce this property at the time of transaction publication. This is to avoid revealing any transaction information to the miner nodes, therefore preserving the privacy of the transaction owner. Instead, we enforce this property at the time of verification. The chronological link created by adding $KL_{AT}(ID_{A-1}|ts_A)$ to the transaction will allow Verifier nodes to prove that the transaction is chronologically ordered, preserving OTIT's ``Chronological'' property.
+
+\item[] \textbf{Order preserving}: This property states that the order of transactions cannot be modified after they are created. In our system, a blockchain is used to store transactions. In a blockchain, new blocks are added in a linear, chronological order, and cannot be modified so long as the majority of miners in the network are honest \cite{blueprint}. Therefore the transactions stored in these blocks satisfy the ``Order preserving'' property of OTIT. % in the dissertation i can discuss ordering within a block here (and go into detail about the merkle root etc)
+
+\item[] \textbf{Verifiable}: This states that the proof, and the order or proofs, should be verifiable by a trusted auditor. In our case, a Verifier node is an auditor trusted by the mobile node seeking verification. A Verifier node may be operated by a bank, government, or any entity wishing to make use of our location proof system.
+
+Our system inherently satisfies this property of OTIT, as Verifier nodes are required to verify or reject a mobile node's claimed location. This is done by examining the mobile node's chronological link of transactions, and recursing for each alibi used for each transaction along the chronological link until the Verifier can conclude if the transaction chain is valid or not.
+
+\item[] \textbf{Tamper evident}: Our system is tamper evident. If a malicious node creates a successful transaction with an honest node, but modifies the transaction data before publishing, a Verifier node will reject the malicious transaction. This rejection will be on the grounds that the matching transaction, published by the honest node, contains contradictory data.
+
+We assume the underlying security of the blockchain, so any malicious miner nodes will not be able to tamper with existing transaction data providing that the majority of CPU power in the mining system is owned by honest miners \cite{bitcoin}. Therefore the tamper evident property is satisfied.
+
+\item[] \textbf{Privacy preserved}: This states that the user should have control over his level of privacy exposure when using the system. In our system, this is provided using \textit{Key Lists} \ref{sec:transactions}. We provide two keys for each transaction; $KL_{AT}[n]$ is used to encrypt the \textit{transaction data} for $A$'s $nth$ transaction, and $KL_{AL}[n]$ is used to encrypt the \textit{backwards chronological link} between $A$'s $nth$ transaction and transaction $n-1$.
+
+To control his privacy, a user can choose only to reveal $KL_{AL}[n]$ for a specific transaction $n$. This may be useful if a user does not wish to reveal transaction data for transactions created within a certain distance of his house, for example. Hiding $KL_{AT}[n]$ while revealing $KL_{AL}[n]$ has the advantage of preserving the user's privacy while maintaining a clear backwards chronological link of transactions for the Verifier to follow, preserving both privacy and system consistency.
+
+\item[] \textbf{Selective in-sequence privacy}: This is the requirement that any proof chain must support \textit{sub-set verification}, allowing a user to provide only a sub-set of proofs from his current proof chain for verification. Our system satisfies this property by using \textit{Key Packets} (section \ref{sssec:key_packets}).
+
+In our system, a \textit{sub-set} of $A$'s proof chain can be defined as $KP_{An}$. The sub-set therefore begins with $ID_{An}$, and ends when there is no key $KL_{AL}[n-m]$ in $KP_{An}$ to decrypt the link to transaction $T_{An-m-1}$. 
+
+\item[] \textbf{Privacy protected chronology}: This states that the proof system, which provides \textit{selective in-sequence privacy}, should also ensure that the user does not ``hide away'' important items within the subset. This is impossible in our system due to the use of backwards chronological linking between transactions, so our model satisfies this property.
+
+\item[] \textbf{Convenience and derivability}: This requirement states that the verification process should be convenient, and the user should not burden the Verifier node with a huge load of data. In our system, the data is stored in a central blockchain that the Verifier has access to, and the user provides the Verifier only with decryption keys and indexes into a sub-section of this data. Therefore the data sent to from the user to the Verifier, $KP_{An}$, is quite small in size.
+
+The Verifier has the freedom to decide how comprehensively to investigate the user's data; It can bound how deeply to investigate the graph of alibi's, if at all. We therefore satisfy this requirement by allowing the Verifier to choose how complex the verification process needs to be.
+\end{enumerate}
+
+\subsection{Attacks on the system}
+\subsubsection{Identity replication}
+By repeatedly publishing fake transactions with the same ID, a malicious user can impede the Verification of certain transactions. This is because a Verifier will have to attempt to decrypt all transactions with the same ID until it finds one that decrypts successfully. A malicious user can therefore slow down the verification stage of certain transactions by flooding the blockchain with transactions with the same ID.
+
+This is an abuse of the system than an attack. A malicious user will not be able to target specific users' transactions, because they are privacy protected. The malicious user can therefore gain no material advantage or compromise the security of the system by using an attack like this.
+
+To avoid this attack, Miner nodes may reject any transactions with duplicate transaction IDs. Assuming sufficiently large transaction IDs, a duplicate ID is unlikely to happen through honest operation. Miners can assume that any transactions with duplicate IDs are malicious, and reject them.
+
+\subsubsection{Sybil attack}
+This system is vulnerable to a Sybil attack, where a single physical node may create multiple \textit{pseudoidentities} \cite{sybil}. A suitably powerful node, or motivated attacker, could create enough pseudonyms to create a subnetwork of nodes, each creating malicious transactions with each other. This would allow an attacker to falsify a believable location proof.
+
+It has been proven that a central certificate authority is the only method of preventing a Sybil attack \cite{sybil}. Other measures, such as web of trust, increase the difficulty involved in performing an attack, but the system remains vulnerable to a motivated attacker.

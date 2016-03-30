@@ -1,0 +1,39 @@
+\begin{tikzpicture}
+\coordinate (A_1) at (0,6);
+\coordinate (A_2) at (0,0);
+
+\coordinate (B_1) at (6,6);
+\coordinate (B_2) at (6,1.75);
+\coordinate (B_3) at (6,1);
+\coordinate (B_4) at (6,0);
+
+\draw[thick] (A_1)--(A_2);
+\draw[thick] (B_1)--(B_2) (B_3)--(B_4);
+\draw (A_1) node[above]{\Large Node $A$};
+\draw (B_1) node[above]{\Large Verifier};
+
+\coordinate (AX_1) at ($(A_1)-(0,0.5)$);
+\coordinate (BX_1) at ($(B_1)-(0,0.75)$);
+\draw[->] (AX_1) -- (BX_1) node[midway,below]
+	{$ID_{An-1}|KP_{An-1}|loc|NP_{An-1}|K^{+}_A$};
+	
+\coordinate (AX_2) at ($(A_1)-(0,2.25)$);
+\coordinate (BX_2) at ($(B_1)-(0,2)$);
+\draw[->] (BX_2) -- (AX_2) node[midway,below]
+	{$K^{+}_A(nonce)$};
+
+\coordinate (AX_3) at ($(A_1)-(0,3.25)$);
+\coordinate (BX_3) at ($(B_1)-(0,3.5)$);
+\draw[->] (AX_3) -- (BX_3) node[midway,below]
+	{$K^{-}_A(K^{+}_A(nonce))$};
+	
+\draw (B_2) node[below,text centered]{\begin{tabular}{r}
+consult blockchain
+\end{tabular}};
+
+\coordinate (AX_2) at ($(A_1)-(0,5.5)$);
+\coordinate (BX_2) at ($(B_1)-(0,5.25)$);
+\draw[->] (BX_2) -- (AX_2) node[midway,below]
+	{verify or reject};
+
+\end{tikzpicture}

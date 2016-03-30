@@ -1,0 +1,101 @@
+\begin{tikzpicture}
+\coordinate (A_1) at (0,10);
+\coordinate (A_2) at (0,9.5);
+\coordinate (A_3) at (0,9);
+\coordinate (A_4) at (0,8.5);
+\coordinate (A_5) at (0,8);
+\coordinate (A_6) at (0,7.5);
+\coordinate (A_7) at (0,7);
+\coordinate (A_8) at (0,4.5);
+\coordinate (A_9) at (0,4);
+\coordinate (A_10) at (0,1.5);
+\coordinate (A_11) at (0,0.25);
+\coordinate (A_12) at (0,0);
+\coordinate (AF_L) at (-0.25,0);
+\coordinate (AF_R) at (0.25,0);
+
+\coordinate (M_1) at (3.5,8.5);
+\coordinate (M_2) at (3.5,7.5);
+
+\coordinate (B_1) at (7,10);
+\coordinate (B_2) at (7,9.5);
+\coordinate (B_3) at (7,9);
+\coordinate (B_4) at (7,8.5);
+\coordinate (B_5) at (7,8);
+\coordinate (B_6) at (7,7.5);
+\coordinate (B_7) at (7,7);
+\coordinate (B_8) at (7,6);
+\coordinate (B_9) at (7,5.5);
+\coordinate (B_10) at (7,1.5);
+\coordinate (B_11) at (7,0.25);
+\coordinate (B_12) at (7,0);
+\coordinate (BF_L) at (6.75,0);
+\coordinate (BF_R) at (7.25,0);
+
+\draw[thick] (A_1)--(A_2) (A_3)--(A_4) (A_5)--(A_6) (A_7)--(A_8) (A_9)--(A_10) (A_11)--(A_12) (AF_L)--(AF_R);
+\draw[thick] (B_1)--(B_2) (B_3)--(B_4) (B_5)--(B_6) (B_7)--(B_8) (B_9)--(B_10) (B_11)--(B_12) (BF_L)--(BF_R);
+\draw (A_1) node[above]{\Large Node $A$};
+\draw (B_1) node[above]{\Large 3rd party};
+
+\draw ($(A_1)!.5!(A_2)$) node[left]{\begin{tabular}{r}
+\textit{$KL_{AT}$, $KL_{AL}$}
+\end{tabular}};
+
+\draw ($(B_1)!.5!(B_2)$) node[right]{\begin{tabular}{r}
+\textit{$KL_{BT}$, $KL_{BL}$}
+\end{tabular}};
+
+\draw (A_2) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{generate $ID_{An}$}}
+\end{tabular}};
+
+\draw (B_2) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{generate $ID_{Bm}$}}
+\end{tabular}};
+
+\draw (M_1) node[below,text centered]{\begin{tabular}{r}
+bluetooth advertising and scanning
+\end{tabular}};
+
+\draw (M_2) node[below,text centered]{\begin{tabular}{r}
+ad-hoc network established between $A$ and $B$
+\end{tabular}};
+
+\coordinate (AX_1) at ($(A_7)-(0,0.25)$);
+\coordinate (BX_1) at ($(B_7)-(0,0.5)$);
+\draw[->] (AX_1) -- (BX_1) node[midway,below]
+	{$T_{req}$: $ID_{An} | ts_A | loc_A$};
+	
+\draw (B_8) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{verify $|ts_A-ts_B| < \epsilon_{ts}$ and $|loc_A-loc_B| < \epsilon_{loc}$}}
+\end{tabular}};
+
+\coordinate (AX_2) at ($(A_7)-(0,2)$);
+\coordinate (BX_2) at ($(B_9)-(0,0.25)$);
+\draw[->] (BX_2) -- (AX_2) node[midway,below]
+	{$T_{res}$: $ID_{Bn} | ts_A | loc_A$};
+	
+\draw (A_8) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{verify $|ts_A-ts_B| < \epsilon_{ts}$ and $|loc_A-loc_B| < \epsilon_{loc}$}}
+\end{tabular}};
+
+\coordinate (AX_3) at ($(A_9)-(0,0.25)$);
+\coordinate (BX_3) at ($(B_9)-(0,2)$);
+\draw[->] (AX_3) -- (BX_3) node[midway,below]
+	{$ID_{An-1}|KP_{An}$};
+
+\coordinate (AX_4) at ($(A_9)-(0,1.5)$);
+\coordinate (BX_4) at ($(B_9)-(0,2.75)$);
+\draw[->] (BX_4) -- (AX_4) node[midway,below]
+	{$ID_{Bm-1}|KP_{Bm}$};
+
+\draw (A_10) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{$T_{An}$ = $KL_{AL}[n](ts|loc|ID_{An}|KP_{Bm})$}}\\
+\small{\textit{publish $ID_{An}|KL_{AT}[n](ID_{An-1})|T_{An}$}}
+\end{tabular}};
+
+\draw (B_10) node[below,text centered]{\begin{tabular}{r}
+\small{\textit{$T_{Bm}$ = $KL_{BL}[m](ts|loc|ID_{Bm}|KP_{An})$}}\\
+\small{\textit{publish $ID_{Bm}|KL_{BT}[m](ID_{Bm-1})|T_{Bm}$}}
+\end{tabular}};
+\end{tikzpicture}
