@@ -103,17 +103,40 @@
 		\frametitle{Design}
 		\framesubtitle{Identities: Duplication}
 		Identity duplication is unavoidable in a decentralised system.
+		\visible<2->{
 		\begin{table}[]
 			\begin{tabular}{l|l}
 				\textbf{ID} & \textbf{Contents}\\\hline
 				\dots & \\\hline
 				ffa0 & \\\hline
 				ffa1 & \\\hline
-				ffa2 & $T_{A4}$ \visible<2->{, \textcolor{red}{$T_{C102}$}}\\\hline
+				ffa2 & $T_{A4}$ \visible<3->{, \textcolor{red}{$T_{C102}$}}\\\hline
 				ffa3 & \\\hline
 				ffa4 & $T_{B87}$\\\hline
 				\dots & \\
 			\end{tabular}
 		\end{table}
+		}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Transactions}
+		Transactions are created when two mobile nodes physically meet.
+		\begin{itemize}
+			\item Ad-hoc bluetooth connection between the nodes.
+		\end{itemize}		
+		
+		\begin{center}
+			\resizebox {0.35\columnwidth} {!} {\includegraphics{diagrams/overview-presentation/mobile-node-meet.png}}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Transactions II}
+		\begin{figure}[t]
+			\resizebox {\columnwidth} {!} {\input{diagrams/transaction_presentation.tex}}
+		\end{figure}
 	\end{frame}
 \end{document}

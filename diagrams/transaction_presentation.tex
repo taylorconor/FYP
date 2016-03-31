@@ -1,0 +1,91 @@
+\begin{tikzpicture}
+
+\node[draw] (A) at (0,0) {\textbf{Node A}};
+\only<2>{\node[above= 0mm of A] {\textcolor{red}{$n$}};}
+\only<3->{\node[above= 0mm of A] {$n$};}
+
+\only<3> {\node[below left= 0mm of A] (k_a) {\textcolor{red}{$K^+_A$, $K^-_A$}};}
+\only<4-> {\node[below left= 0mm of A] (k_a) {$K^+_A$, $K^-_A$};}
+
+\only<4> {\node[below= 0mm of k_a] (nl_a) {\textcolor{red}{$NL_A$}};}
+\only<5-> {\node[below= 0mm of k_a] (nl_a) {$NL_A$};}
+	
+\only<5> {\node[below right=0mm and -1cm of nl_a] (id_a) {\textcolor{red}{$ID_{An} = K^+_A(NL_A[n])$}};}
+\only<6-> {\node[below= 0mm of nl_a] (id_a) {$ID_{An}$};}
+
+\only<6> {\node[below= 0mm of id_a] (ts_a) {\textcolor{red}{$ts_A$}};}
+\only<7-> {\node[below= 0mm of id_a] (ts_a) {$ts_A$};}
+
+\only<7> {\node[below= 0mm of ts_a] (loc_a) {\textcolor{red}{$loc_{A}$}};}
+\only<8-> {\node[below= 0mm of ts_a] (loc_a) {$loc_{A}$};}
+
+\only<15>{
+\node[below= 0mm of loc_a] (id_b_a) {\textcolor{red}{$ID_{Bm}$}};
+\node[below= 0mm of id_b_a] (ts_b_a) {\textcolor{red}{$ts_B$}};
+\node[below= 0mm of ts_b_a] (loc_b_a) {\textcolor{red}{$loc_{B}$}};
+}
+\only<16->{
+\node[below= 0mm of loc_a] (id_b_a) {$ID_{Bm}$};
+\node[below= 0mm of id_b_a] (ts_b_a) {$ts_B$};
+\node[below= 0mm of ts_b_a] (loc_b_a) {$loc_{B}$};
+}
+
+
+\node[draw] (B) at (5,0) {\textbf{Node B}};
+\only<2>{\node[above= 0mm of B] {\textcolor{red}{$m$}};}
+\only<3->{\node[above= 0mm of B] {$m$};}
+
+\only<8->{
+\node[below right= 0mm of B] (k_b) {$K^+_B$, $K^-_B$};
+\node[below= 0mm of k_b] (nl_b) {$NL_B$};
+\node[below= 0mm of nl_b] (id_b) {$ID_{Bm}$};
+\node[below= 0mm of id_b] (ts_b) {$ts_B$};
+\node[below= 0mm of ts_b] (loc_b) {$loc_{B}$};
+}
+
+\only<11>{
+\node[below= 0mm of loc_b] (id_a_b) {\textcolor{red}{$ID_{An}$}};
+\node[below= 0mm of id_a_b] (ts_a_b) {\textcolor{red}{$ts_A$}};
+\node[below= 0mm of ts_a_b] (loc_a_b) {\textcolor{red}{$loc_{A}$}};
+}
+\only<12->{
+\node[below= 0mm of loc_b] (id_a_b) {$ID_{An}$};
+\node[below= 0mm of id_a_b] (ts_a_b) {$ts_A$};
+\node[below= 0mm of ts_a_b] (loc_a_b) {$loc_{A}$};
+}
+
+\only<9>{
+\draw[->] (A) -- (B) node[midway,below] (treq_label)
+	{\textcolor{red}{$T_{req}$}};
+}
+\only<10>{
+\draw[->] (A) -- (B) node[midway,below] (treq_label)
+	{$T_{req}$};
+}
+\only<10>{
+\node[below= 0mm of treq_label] {\textcolor{red}{$ID_{An} | ts_A | loc_A$}};
+}
+
+\only<12>{
+\node[left= 5mm of loc_b] (v_b) {\small{\textit{\textcolor{red}{verify $|ts_A-ts_B| < \epsilon_{ts}$}}}};
+\node[below= -2mm of v_b] {\small{\textit{\textcolor{red}{$\&\& |loc_A-loc_B| < \epsilon_{loc}$}}}};
+}
+
+\only<13>{
+\draw[->] (B) -- (A) node[midway,below] (tres_label)
+	{\textcolor{red}{$T_{res}$}};
+}
+\only<14>{
+\draw[->] (B) -- (A) node[midway,below] (tres_label)
+	{$T_{res}$};
+}
+\only<14>{
+\node[below= 0mm of tres_label] {\textcolor{red}{$ID_{Bm} | ts_B | loc_B$}};
+}
+
+\only<16>{
+\node[right= 5mm of loc_a] (v_a) {\small{\textit{\textcolor{red}{verify $|ts_A-ts_B| < \epsilon_{ts}$}}}};
+\node[below= -2mm of v_a] {\small{\textit{\textcolor{red}{$\&\& |loc_A-loc_B| < \epsilon_{loc}$}}}};
+}
+
+\end{tikzpicture}
