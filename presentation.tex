@@ -1,0 +1,119 @@
+\documentclass{beamer}
+
+\beamertemplatenavigationsymbolsempty
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{tikz}
+\usetikzlibrary{matrix,positioning,arrows.meta,arrows,calc}
+
+\title[Crisis]
+{Decentralised location verification system}
+\author{Conor Taylor}
+\date{
+	B.A.(Mod.) Computer Science\\
+	Final Year Project, April 2016\\
+	Supervisor: Stephen Barrett
+}
+
+\begin{document}
+
+	\frame{\titlepage}
+	
+	\begin{frame}
+    	\frametitle{Problem}
+    	A system that allows participants to verify a users claimed location.
+    	\\
+    	\null
+    	\visible<2->{
+    		Goals:
+   			\begin{itemize}
+    			\item<3-> False location claims must be detectable.
+    			\item<4-> Privacy protecting.
+    			\item<5-> Cannot rely on any centralised resources.
+    			\item<6-> Capable of running in the background on mobile devices.
+    		\end{itemize}
+    	}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Background}
+		There are \textbf{no} known existing decentralised location proof systems.
+		\\
+		\null
+		Existing centralised solutions: hardware and/or software
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		3 distinct entities:
+		\begin{itemize}
+			\item Mobile node $\vcenter{\hbox{\includegraphics[scale=0.2]{diagrams/overview-presentation/mobile-node.png}}}$
+			\item Miner node $\vcenter{\hbox{\includegraphics[scale=0.2]{diagrams/overview-presentation/miner-node.png}}}$
+			\item Verifier node $\vcenter{\hbox{\includegraphics[scale=0.2]{diagrams/overview-presentation/verifier-node.png}}}$
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Overview}
+		\begin{figure}[H]
+			\begin{center}
+				\resizebox {\columnwidth} {!} {
+					\includegraphics<1>{diagrams/overview-presentation/Overview-13.png}
+					\includegraphics<2>{diagrams/overview-presentation/Overview-12.png}
+					\includegraphics<3>{diagrams/overview-presentation/Overview-11.png}
+					\includegraphics<4>{diagrams/overview-presentation/Overview-10.png}
+					\includegraphics<5>{diagrams/overview-presentation/Overview-9.png}
+					\includegraphics<6>{diagrams/overview-presentation/Overview-8.png}
+					\includegraphics<7>{diagrams/overview-presentation/Overview-7.png}
+					\includegraphics<8>{diagrams/overview-presentation/Overview-6.png}
+					\includegraphics<9>{diagrams/overview-presentation/Overview-5.png}
+					\includegraphics<10>{diagrams/overview-presentation/Overview-4.png}
+					\includegraphics<11>{diagrams/overview-presentation/Overview-3.png}
+					\includegraphics<12>{diagrams/overview-presentation/Overview-2.png}
+					\includegraphics<13>{diagrams/overview-presentation/Overview-1.png}
+					\includegraphics<14>{diagrams/overview-presentation/Overview-0.png}
+			}
+			\end{center}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Identities}
+		Used to anonymously identify a node in a transaction.
+		\newline
+		
+		Balancing goals:
+		\begin{itemize}
+			\item False location claims must be detectable.
+			\item Privacy protecting.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Identities: Nonce Lists}
+		\begin{figure}[H]
+			\resizebox {\columnwidth} {!} {\input{diagrams/nonce_list_presentation.tex}}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Identities: Duplication}
+		Identity duplication is unavoidable in a decentralised system.
+		\begin{table}[]
+			\begin{tabular}{l|l}
+				\textbf{ID} & \textbf{Contents}\\\hline
+				\dots & \\\hline
+				ffa0 & \\\hline
+				ffa1 & \\\hline
+				ffa2 & $T_{A4}$ \visible<2->{, \textcolor{red}{$T_{C102}$}}\\\hline
+				ffa3 & \\\hline
+				ffa4 & $T_{B87}$\\\hline
+				\dots & \\
+			\end{tabular}
+		\end{table}
+	\end{frame}
+\end{document}
