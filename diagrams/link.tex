@@ -1,0 +1,33 @@
+\begin{tikzpicture}[>=latex]
+
+\only<2->{
+\node[draw] (A1) at (6,0) {$T_2$};
+\node[draw,left=0mm of A1] (A2) {$L_2$};
+
+\only<2>{\node[draw] (B1) at (4,0) {$T_1$};}
+\only<3->{\node[draw,fill=gray] (B1) at (4,0) {$T_1$};}
+\node[draw,left=0mm of B1] (B2) {$L_1$};
+
+\node[draw] (C1) at (2,0) {$T_0$};
+\node[draw,left=0mm of C1] (C2) {$L_0$};
+
+\node (D) at (0.5,0) {$\emptyset$};
+
+\draw[->] ($(A2.west)!0.4!(A2.center)$) -- (B1);
+\draw[->] ($(B2.west)!0.4!(B2.center)$) -- (C1);
+\draw[->] ($(C2.west)!0.4!(C2.center)$) -- (D);
+
+\onslide<5->{
+\node (T) at (6,-1) {\tiny{$KL_{AT}[2]$}};
+\node (L) at (5,-1) {\tiny{$KL_{AL}[2]$}};
+\draw[->] (L) -- (A2.south);
+\draw[->] (T) -- (A1.south);
+}
+
+\onslide<6->{
+\node (L2) at (3.25,-1) {\tiny{$KL_{AL}[1]$}};
+\draw[->] (L2) -- (B2.south);
+}
+}
+
+\end{tikzpicture}

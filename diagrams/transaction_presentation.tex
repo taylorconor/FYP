@@ -54,6 +54,15 @@
 \node[below= 0mm of ts_a_b] (loc_a_b) {$loc_{A}$};
 }
 
+\only<18>{
+\node[below= 0mm of loc_a_b] (id_a-1_b) {\textcolor{red}{$ID_{An-1}$}};
+\node[below= 0mm of id_a-1_b] (kp_a) {\textcolor{red}{$KP_{An}$}};
+}
+\only<19->{
+\node[below= 0mm of loc_a_b] (id_a-1_b) {$ID_{An-1}$};
+\node[below= 0mm of id_a-1_b] (kp_a) {$KP_{An}$};
+}
+
 \only<9>{
 \draw[->] (A) -- (B) node[midway,below] (treq_label)
 	{\textcolor{red}{$T_{req}$}};
@@ -86,6 +95,11 @@
 \only<16>{
 \node[right= 5mm of loc_a] (v_a) {\small{\textit{\textcolor{red}{verify $|ts_A-ts_B| < \epsilon_{ts}$}}}};
 \node[below= -2mm of v_a] {\small{\textit{\textcolor{red}{$\&\& |loc_A-loc_B| < \epsilon_{loc}$}}}};
+}
+
+\only<17>{
+\draw[->] (A) -- (B) node[midway,below] (tres_label)
+	{\textcolor{red}{$ID_{An-1}|KP_{An}$}};
 }
 
 \end{tikzpicture}

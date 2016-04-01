@@ -135,8 +135,104 @@
 	\begin{frame}
 		\frametitle{Design}
 		\framesubtitle{Transactions II}
-		\begin{figure}[t]
-			\resizebox {\columnwidth} {!} {\input{diagrams/transaction_presentation.tex}}
+		Node $A$ will create the following transaction after meeting node $B$:
+		\newline
+		
+		\begin{center}
+		\only<1>{$T_{An} = K_A(ts_A|loc_A|ID_{An}|KP_{Bm})$}
+		\only<2->{$T_{An} = K_A(ts_A|loc_A|ID_{An}|\textcolor{red}{KP_{Bm}})$}
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Transactions: Key Packets}
+		Key Packets provide a Verifier with a means of examining a mobile node's transactions.
+		\newline
+		
+		\only<2->{
+		Two main properties:
+		\begin{itemize}
+			\only<2>{
+			\item Allow a Verifier to build a tree of a mobile node's activity.
+			}
+			\only<3>{
+			\item \textcolor{red}{Allow a Verifier to build a graph of a mobile node's activity.}
+			}
+			\item Allow a mobile node to preserve control its own privacy.
+		\end{itemize}
+		}
+	\end{frame}
+	
+	\begin{frame}[b]
+		\frametitle{Design}
+		\framesubtitle{Transactions: Key Packets - Verification}
+		\vspace{-0.5cm}
+		\begin{figure}
+			\resizebox {\columnwidth} {!} {\input{diagrams/tree.tex}}
 		\end{figure}
 	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Transactions: Key Packets}
+		Key Packets provide a Verifier with a means of examining a mobile node's transactions.
+		\newline
+		
+		Two main properties:
+		\begin{itemize}
+			\item Allow a Verifier to build a graph of a mobile node's activity.
+			\item \textcolor{red}{Allow a mobile node to preserve control its own privacy.}
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Transactions: Key Packets - Privacy}
+		Published transactions split into two parts: Link and Transaction
+		\newline
+		
+		\begin{figure}
+			\resizebox {\columnwidth} {!} {\input{diagrams/link.tex}}
+		\end{figure}
+		\only<4->{
+			\begin{center}
+				Two \textit{Key Lists}: $KL_{AT}$ and $KL_{AL}$.
+			\end{center}
+		}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Transactions III}
+		Node $A$ will create the following transaction after meeting node $B$:
+		
+		\begin{center}
+		\only<1>{$T_{An} = \textcolor{red}{K_A}(ts_A|loc_A|ID_{An}|KP_{Bm})$}
+		\only<2>{$T_{An} = \textcolor{red}{KL_{AT}[n]}(ts_A|loc_A|ID_{An}|KP_{Bm})$}
+		\only<3->{$T_{An} = KL_{AT}[n](ts_A|loc_A|ID_{An}|KP_{Bm})$}
+		\end{center}
+		\vspace{0.5cm}
+		
+		\only<3->{
+		Node $A$ will then publish the following to the blockchain:
+		
+		\begin{center}
+		$P_{An} = ID_{An}|\textcolor{red}{KL_{AL}[n]}(ID_{An-1}|ts_A)|T_{An}$
+		\end{center}
+		} 
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Design}
+		\framesubtitle{Verification}
+		Mobile node needs to provide Verifier node with:
+		\begin{itemize}
+			\item ID of most recent transaction.
+			\item Key Packet for $n$ most recent transactions.
+			\item Nonce list for $n$ most recent IDs.
+			\item Public key.
+		\end{itemize}
+	\end{frame}
+	
 \end{document}
