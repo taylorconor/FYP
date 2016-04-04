@@ -1,0 +1,48 @@
+[file]
+presentation.pdf
+[font_size]
+9309
+[notes]
+### 1
+- Purely a design and evaluation project
+- Aim of the project is to put forward a viable design for a decentralised location verification system
+- In this presentation I'm going to explain the problem, provide some background about similar systems and components i'll be using, and explain the design and evaluation of my system.### 2
+- The focus of the project was on design and evaluation, so there is no implementation
+- Design and assessment is more interesting than implementation### 6
+### 11
+- The difference between decentralised and distributed is subtle but important:
+    - A decentralised system is not controlled by any one entity; every participant in the system has the same power and status as everyone else.
+    - A distributed system may not have any central processing system, but there will be one participant (or group of participants) considered in charge. Users of the system will have to blindly trust these central servers (or nodes). If a central node is compromised, an attacker can achieve unlimited control over the system.
+
+- I have found lots of interesting location verification systems, but i'll explain the 3 most interesting ones briefly now, to provide some background in the problem area.### 13
+### 14
+### 18
+- Problem: proof resides with the central server
+- Problem: users privacy is violated### 22
+- Problem: if an attacker compromises the central server, he can create unlimited, undetectable location proofs for himself### 29
+- Problem: this system breaks if all three entities are malicious### 31
+- This is because central resources should not be trusted; they can be compromised and false location proofs could then be created by an attacker### 32
+### 33
+- It's used successfully by bitcoin
+- I am using it to store location proofs in my system### 36
+- In bitcoin, the blockchain stores transactions. In my system, it stores location proofs, so they are permenant.### 39
+- 10m range### 49
+- Mobile node make a LOCATION CLAIM to the Verifier, with its GPS COORDINATES and a LINK to its transactions IN THE BLOCKCHAIN### 52
+- Now I'll go into more complex detail about the different parts of the system### 53
+- It's very difficult to BOTH detect false proofs and preserve privacy if the identity changes every time
+- I use something I call NONCE LISTS to do this### 54
+- EVERY MOBILE NODE has a public/private key pair, a nonce list and a list of its identities### 57
+- I also have a solution for this identity duplication### 60
+- Other node known as an ALIBI
+- BOTH nodes will publish a transaction
+- TRANSACTION IS ONLY VALID if both nodes have published the transaction and they're both accessible on the blockchain### 69
+- Makes it easy for a Verifier to EXAMINE ALIBIS CREDIBILITY, which is used to verify or reject the users claimed location### 71
+- This gets slightly more complicated
+- I encrypt bits of the transaction with different encryption keys, to allow the user more control over what data they REVEAL TO ALIBIS### 78
+- Earlier I said this was encrypted. IN FACT it's encrypted with the TRANSACTION KEY### 80
+- A link to the PREVIOUS TRANSACTION is encrypted with a LINK KEY
+- This link is used to prove that this transaction occurred chronologically after node A's previous transaction### 81
+- Verifier then examines the tree of alibis to determine whether the user is at the location they claim to be or not### 87
+- Fundamental assumption of cryptography### 97
+- I have listed some simple Verification techniques in my report, but there is lots of potential for more advanced techniques### 98
+- Witholding too many transactions will OF COURSE make a node unlikely to be verified, but the impact of witholding some transactions should be studied in greater detail

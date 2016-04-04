@@ -6,6 +6,8 @@
 \usepackage{tikz}
 \usetikzlibrary{matrix,positioning,arrows.meta,arrows,calc}
 
+\usepackage{soul}
+
 \title[Crisis]
 {Decentralised location verification system}
 \author{Conor Taylor}
@@ -21,26 +23,140 @@
 	
 	\begin{frame}
     	\frametitle{Problem}
-    	A system that allows participants to verify a users claimed location.
-    	\\
+    	Design and evaluate a decentralised system that allows participants to prove their location.
+    	\begin{itemize}
+    		\item<2-> Is is possible?
+    		\item<3-> Is it resilient to attack?
+    		\item<4-> Does it satisfy my goals?
+    	\end{itemize}
     	\null
-    	\visible<2->{
+    	\visible<5->{
     		Goals:
    			\begin{itemize}
-    			\item<3-> False location claims must be detectable.
-    			\item<4-> Privacy protecting.
-    			\item<5-> Cannot rely on any centralised resources.
-    			\item<6-> Capable of running in the background on mobile devices.
+   				\item<5-> Privacy protecting.
+    			\item<6-> False location claims must be detectable.
+    			\item<7-> Cannot rely on any centralised resources.
+    			\item<8-> Capable of running on mobile devices.
     		\end{itemize}
     	}
 	\end{frame}
 	
 	\begin{frame}
 		\frametitle{Background}
-		There are \textbf{no} known existing decentralised location proof systems.
-		\\
+		There are no known existing decentralised location proof systems.
+		\newline
+
+		\visible<2->{There are existing \textit{distributed} location proof systems, with different interesting approaches.}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Background}
+		\framesubtitle{HP Laboratories}
+		\begin{center}
+			HP Laboratories.
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+		\frametitle{Background}
+		\framesubtitle{HP Laboratories}
+		\begin{figure}[H]
+			\begin{center}
+				\resizebox {0.5\columnwidth} {!} {
+					\includegraphics<1>{diagrams/femto_diag_5.png}
+					\includegraphics<2>{diagrams/femto_diag_4.png}
+					\includegraphics<3>{diagrams/femto_diag_3.png}
+					\includegraphics<4>{diagrams/femto_diag_2.png}
+					\includegraphics<5>{diagrams/femto_diag_1.png}
+					\includegraphics<6>{diagrams/femto_diag_0.png}
+				}
+			\end{center}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Background}
+		\framesubtitle{University of Waterloo}
+		\begin{center}
+			University of Waterloo.
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+		\frametitle{Background}
+		\framesubtitle{University of Waterloo}
+		\begin{figure}[H]
+			\begin{center}
+				\resizebox {0.8\columnwidth} {!} {
+					\includegraphics<1>{diagrams/AP_paper_2.png}
+					\includegraphics<2>{diagrams/AP_paper_1.png}
+					\includegraphics<3>{diagrams/AP_paper_3.png}
+				}
+			\end{center}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Background}
+		\framesubtitle{Who, When. and Where?}
+		\begin{center}
+			Who, When, and Where?\\
+			University of Alabama.
+		\end{center}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+		\frametitle{Background}
+		\framesubtitle{Who, When. and Where?}
+		\begin{figure}[H]
+			\begin{center}
+				\resizebox {0.4\columnwidth} {!} {
+					\includegraphics<1>{diagrams/witness_paper_3.png}
+					\includegraphics<2>{diagrams/witness_paper_2.png}
+					\includegraphics<3>{diagrams/witness_paper_1.png}
+					\includegraphics<4>{diagrams/witness_paper_0.png}
+					\includegraphics<5>{diagrams/witness_paper_5.png}
+					\includegraphics<6>{diagrams/witness_paper_4.png}
+				}
+			\end{center}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+    	\frametitle{Problem}
+    	\framesubtitle{Issues}
+    	A decentralised location proof system needs a way of:
+   		\begin{itemize}
+    		\item Creating, storing, and providing access to location proofs.
+    		\item Detecting fake location proofs.
+    		\item Allowing users full control over their own privacy.
+    	\end{itemize}
+		\visible<2>{
 		\null
-		Existing centralised solutions: hardware and/or software
+		Without any central resource to store data or manage the system.}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Background}
+		\framesubtitle{Blockchain}
+		A blockchain is a decentralised, tamper-proof, append-only ledger.
+		\newline
+		
+		\visible<2->{Allows transaction records to be stored publicly and permenantly, without use of a central authority.}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+		\frametitle{Background}
+		\framesubtitle{Blockchain}
+		\begin{figure}[H]
+			\resizebox {0.8\columnwidth} {!} {\input{diagrams/blockchain.tex}}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+		\frametitle{Background}
+		\framesubtitle{Blockchain}
+		Decentralised, tamper-proof method of storing location proofs.
 	\end{frame}
 	
 	\begin{frame}
@@ -78,10 +194,27 @@
 		\end{figure}
 	\end{frame}
 	
+	\begin{frame}[noframenumbering]
+    	\frametitle{Problem}
+    	A system that allows participants to verify a users claimed location.
+    	\\
+    	\null
+    	Goals:
+   		\begin{itemize}
+    		\item Privacy protecting.
+    		\item False location claims must be detectable.
+    		\item \textcolor{red}{Cannot rely on any centralised resources.}
+    		\item \textcolor{red}{Capable of running on mobile devices.}
+    	\end{itemize}
+	\end{frame}
+	
 	\begin{frame}
 		\frametitle{Design}
 		\framesubtitle{Identities}
-		Used to anonymously identify a node in a transaction.
+		Used to \textbf{anonymously} identify a node in a transaction.
+		\newline
+		
+		Every node generates a new identity for each transaction, making it untrackable.
 		\newline
 		
 		Balancing goals:
@@ -102,7 +235,7 @@
 	\begin{frame}
 		\frametitle{Design}
 		\framesubtitle{Identities: Duplication}
-		Identity duplication is unavoidable in a decentralised system.
+		Identity duplication unavoidable in a scalable decentralised system.
 		\visible<2->{
 		\begin{table}[]
 			\begin{tabular}{l|l}
@@ -132,9 +265,9 @@
 		\end{center}
 	\end{frame}
 	
-	\begin{frame}
+	\begin{frame}[noframenumbering]
 		\frametitle{Design}
-		\framesubtitle{Transactions II}
+		\framesubtitle{Transactions}
 		Node $A$ will create the following transaction after meeting node $B$:
 		\newline
 		
@@ -150,14 +283,14 @@
 		Key Packets provide a Verifier with a means of examining a mobile node's transactions.
 		\newline
 		
-		\only<2->{
+		\visible<2->{
 		Two main properties:
 		\begin{itemize}
 			\only<2>{
 			\item Allow a Verifier to build a tree of a mobile node's activity.
 			}
-			\only<3>{
-			\item \textcolor{red}{Allow a Verifier to build a graph of a mobile node's activity.}
+			\only<3->{
+			\item \textcolor{red}{Allow a Verifier to build a tree of a mobile node's activity.}
 			}
 			\item Allow a mobile node to preserve control its own privacy.
 		\end{itemize}
@@ -171,6 +304,20 @@
 		\begin{figure}
 			\resizebox {\columnwidth} {!} {\input{diagrams/tree.tex}}
 		\end{figure}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+    	\frametitle{Problem}
+    	A system that allows participants to verify a users claimed location.
+    	\\
+    	\null
+    	Goals:
+   		\begin{itemize}
+    		\item Privacy protecting.
+    		\item \textcolor{red}{False location claims must be detectable.}
+    		\item Cannot rely on any centralised resources.
+    		\item Capable of running on mobile devices.
+    	\end{itemize}
 	\end{frame}
 	
 	\begin{frame}
@@ -195,7 +342,7 @@
 		\begin{figure}
 			\resizebox {\columnwidth} {!} {\input{diagrams/link.tex}}
 		\end{figure}
-		\only<4->{
+		\visible<4->{
 			\begin{center}
 				Two \textit{Key Lists}: $KL_{AT}$ and $KL_{AL}$.
 			\end{center}
@@ -204,7 +351,7 @@
 	
 	\begin{frame}
 		\frametitle{Design}
-		\framesubtitle{Transactions III}
+		\framesubtitle{Transactions}
 		Node $A$ will create the following transaction after meeting node $B$:
 		
 		\begin{center}
@@ -214,7 +361,7 @@
 		\end{center}
 		\vspace{0.5cm}
 		
-		\only<3->{
+		\visible<3->{
 		Node $A$ will then publish the following to the blockchain:
 		
 		\begin{center}
@@ -233,6 +380,149 @@
 			\item Nonce list for $n$ most recent IDs.
 			\item Public key.
 		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[noframenumbering]
+    	\frametitle{Problem}
+    	A system that allows participants to verify a users claimed location.
+    	\\
+    	\null
+    	Goals:
+   		\begin{itemize}
+    		\item \textcolor{red}{Privacy protecting.}
+    		\item False location claims must be detectable.
+    		\item Cannot rely on any centralised resources.
+    		\item Capable of running on mobile devices.
+    	\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Evaluation}
+		Case-based evaluation.
+		\newline
+		
+		\visible<2->{
+		Two kinds of case-based evaluation:
+		\begin{itemize}
+			\item Desirable properties.
+			\item Threats.
+		\end{itemize}}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Evaluation}
+		\framesubtitle{Desirable properties}
+		OTIT defines 8 desirable properties of a location proof system:
+		\begin{columns}
+			\begin{column}{0.5\textwidth}
+				\begin{itemize}
+					\item Chronological.
+					\item Order-preserving.\newline
+					\item Verifiable.\newline
+					\item Tamper evident.
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\begin{itemize}
+					\item Privacy preserved.
+					\item Selective in-sequence privacy.
+					\item Privacy protected chronology.
+					\item Convenience and derivablilty.
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Evaluation}
+		\framesubtitle{Threats}
+		A number of papers have gathered threats to evaluate their models against:
+		\begin{columns}
+			\begin{column}{0.5\textwidth}
+				\begin{itemize}
+					\item Dishonest users.
+					\item Malicious intruders.
+					\item Curious users.
+					\item Malicious applications.
+					\item False timestamping.
+					\item Implication.
+					\item Proof switching.
+					\item Relay attack.\newline
+				\end{itemize}
+			\end{column}
+			\begin{column}{0.5\textwidth}
+				\begin{itemize}
+					\item Eavesdroppers.
+					\item Wormhole attacks.
+					\item False presence.
+					\item False assertion.
+					\item Denial of presence.
+					\item Denial of witness's presence.
+					\item Privacy violation.
+					\item \st{Weak identities.}
+					\item \st{Sybil attack.}
+				\end{itemize}
+			\end{column}
+		\end{columns}
+	\end{frame}	
+	
+	\begin{frame}
+		\frametitle{Evaluation}
+		\framesubtitle{Threats - Weak identities}
+		I assume that private keys and nonce lists are never shared.
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Evaluation}
+		\framesubtitle{Threats - Sybil attack}
+		No way of determining if two distinct location proof chains were created by two distinct mobile nodes.
+		\newline
+		
+		\visible<2->{
+		No provable decentralised solution to the Sybil attack (yet).}
+		\newline
+		
+		\visible<3->{
+		Mitigations:
+		\begin{itemize}
+			\item Introduce identity creation penalty.
+			\item Web of trust.
+			\item Secret verification techniques.
+		\end{itemize}}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Conclusion}
+		Developed a privacy-protecting, decentralised location proof system.
+		\newline
+		
+		\visible<2->{
+		Completed a case-based evaluation.}
+		\newline
+		
+		\visible<3->{
+		Currently vulnerable to extremely targeted Sybil attacks.}
+		\newline
+		
+		\visible<4->{
+		Resilient against every other known attack.
+		\begin{itemize}
+			\item<5-> Sybil attack can be heavily mitigated against.
+			\item<6-> Decentralised solution to Sybil attack may be found in future.
+		\end{itemize}}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Future work}
+		Further study into advanced Verification techniques.
+		\newline
+		
+		\visible<2->{
+		Investigate the impact that witholding certain private transactions has on verifiability.}
+		\newline
+		
+		\visible<3->{
+		Build it!}
 	\end{frame}
 	
 \end{document}
