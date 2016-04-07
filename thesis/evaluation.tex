@@ -1,7 +1,6 @@
-\section{Evaluation}
 In this paper, we have presented a model for a location proof system which aims to preserve privacy and prevent false proofs from being created.
 
-\subsection{OTIT conformance}
+\section{OTIT conformance}
 We can compare our model to OTIT \cite{otit}, a list of features and requirements necessary for designing any secure location proof scheme. OTIT presents 8 such requirements:
 \begin{enumerate}
 \item[] \textbf{Chronological}: The chronological property of OTIT ensures that transactions are published in the order they were created. In our system we do not enforce this property at the time of transaction publication. This is to avoid revealing any transaction information to the miner nodes, therefore preserving the privacy of the transaction owner. Instead, we enforce this property at the time of verification. The chronological link created by adding $KL_{AT}(ID_{A-1}|ts_A)$ to the transaction will allow Verifier nodes to prove that the transaction is chronologically ordered, preserving OTIT's ``Chronological'' property.
@@ -31,15 +30,15 @@ In our system, a \textit{sub-set} of $A$'s proof chain can be defined as $KP_{An
 The Verifier has the freedom to decide how comprehensively to investigate the user's data; It can bound how deeply to investigate the graph of alibi's, if at all. We therefore satisfy this requirement by allowing the Verifier to choose how complex the verification process needs to be.
 \end{enumerate}
 
-\subsection{Attacks on the system}
-\subsubsection{Identity replication}
+\section{Attacks on the system}
+\subsection{Identity replication}
 By repeatedly publishing fake transactions with the same ID, a malicious user can impede the Verification of certain transactions. This is because a Verifier will have to attempt to decrypt all transactions with the same ID until it finds one that decrypts successfully. A malicious user can therefore slow down the verification stage of certain transactions by flooding the blockchain with transactions with the same ID.
 
 This is an abuse of the system than an attack. A malicious user will not be able to target specific users' transactions, because they are privacy protected. The malicious user can therefore gain no material advantage or compromise the security of the system by using an attack like this.
 
 To avoid this attack, Miner nodes may reject any transactions with duplicate transaction IDs. Assuming sufficiently large transaction IDs, a duplicate ID is unlikely to happen through honest operation. Miners can assume that any transactions with duplicate IDs are malicious, and reject them.
 
-\subsubsection{Sybil attack}
+\subsection{Sybil attack}
 This system is vulnerable to a Sybil attack, where a single physical node may create multiple \textit{pseudoidentities} \cite{sybil}. A suitably powerful node, or motivated attacker, could create enough pseudonyms to create a subnetwork of nodes, each creating malicious transactions with each other. This would allow an attacker to falsify a believable location proof.
 
 It has been proven that a central certificate authority is the only method of preventing a Sybil attack \cite{sybil}. Other measures, such as web of trust, increase the difficulty involved in performing an attack, but the system remains vulnerable to a motivated attacker.

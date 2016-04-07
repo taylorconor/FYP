@@ -1,4 +1,3 @@
-\section{Design}
 The location proof system we propose allows \textit{mobile nodes} to create location proofs for each other after physically meeting. When two mobile nodes are in close physical proximity, they initiate a transaction over a short range, ad-hoc network such as Bluetooth.
 
 To create a transaction, two mobile nodes anonymously share their GPS coordinates and current time over a short-range network. Both nodes then check that these parameters don't differ by more than some value $\epsilon$. Once satisfied, they each create an encrypted, privacy-protecting transaction logging their location and the identity of the other mobile node (the \textit{alibi}) used to create the transaction. This transaction is published onto a public, append-only bulletin board known as a \textit{blockchain} \cite{blueprint}.
@@ -27,19 +26,19 @@ Figure \ref{fig:overview} provides an overview of the operation of the proposed 
 \item The Verifier accepts or rejects the  mobile node's claimed location based on its transactions in the blockchain. 
 \end{enumerate}
 
-\subsection{Identities}
+\section{Identities}
 In order to preserve user's privacy, a user will only ever use an identity for one transaction, before generating a new one. This prevents curious users from watching the public blockchain for a known identity and tracking it. However, to prevent identity theft, it is important for the Verifier to be able to prove that a mobile node is the owner of each identity. This is achieved using a public/private key pair for each mobile node.
 
 When a mobile node is created, it generates a public/private key pair. To maintain anonymity, the mobile node will use the public key to encrypt \textit{nonces} to create \textit{identities}, and use these to identify itself in a transaction. A different identity will be created for each transaction. During the verification stage, the node will provide the Verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions (see figure \ref{fig:verify_request}). This allows the Verifier to calculate all of the node's identities, and prove that they were all created by the same node, and can then retrieve the transactions associated with those identities from the blockchain. The Verifier will also ensure that the node owns the private key associated with the provided public key, to prevent identity theft.
 
-\subsubsection{Nonce list} \label{sssec:nonce_list}
+\subsection{Nonce list} \label{sssec:nonce_list}
 A \textit{Nonce List} is simply a list of all of the nonces a mobile node has used so far to generate identities. When a mobile node generates a new identity, it must first generate a new nonce which is then encrypted to create the identity. The nonce is appended to the mobile node's nonce list, so it can be used later during verification (see section \ref{ssec:verification}).
 
-\subsubsection{Identity duplication}
+\subsection{Identity duplication}
 Since all identities are generated from random nonces, there is nothing to stop two nodes from generating the same identity and using it in different transactions. It is therefore possible that during verification, a Verifier node may find multiple transactions with the same ID in the blockchain. The Verifier will have a decryption key for the transaction it is searching for, which will only be able to decrypt one of the transactions with the duplicate ID. The Verifier will try to decrypt each one until it finds one that can be decrypted successfully.
 
 \newpage
-\subsection{Transactions} \label{sec:transactions}
+\section{Transactions} \label{sec:transactions}
 During a transaction between two nodes, a number of different items must be shared and calculated. Figure \ref{fig:transaction} describes an honest, successful transaction, assuming an ad-hoc Bluetooth network has already been set up between nodes $A$ and $B$.
 
 \begin{figure}[H]
@@ -60,7 +59,7 @@ After creating an ad-hoc Bluetooth network between nodes $A$ and $B$, the first 
 
 After nodes agree upon the parameters of the transaction, they exchange their previous ID, along with their \textit{Key Packets}. A \textit{Key Packet} is a list of keys used in a node's $n$ most recent transactions, along with the transaction ID's if necessary. This allows node $A$ to decrypt node $B$'s $m$ most recent transactions, therefore providing an alibi for node $A$.
 
-\subsubsection{Transaction creation}
+\subsection{Transaction creation}
 Once nodes have exchanged \textit{Key Packets}, their communication is finished and they can close their ad-hoc channel. Each node creates a new transaction object, $T$, to publish onto the public blockchain. The following transaction data will be calculated by node $A$, after communicating with node $B$:
 \\
 
@@ -78,7 +77,7 @@ Where:
 	\item[] $\mathbf{KP_{Bm}}$ is $B$'s \textit{Key Packet} at time $m$. Its exact contents are discussed in more detail in section \ref{sssec:key_packets}
 \end{itemize}
 
-\subsubsection{Publishing to the blockchain}
+\subsection{Publishing to the blockchain}
 After creating $T_{An}$, node $A$ must publish it to the public blockchain. The data published must be searchable in order to provide a Verifier with some way of identifying specific transactions. Nodes use their current ID as the identifier for the transaction.
 
 \textit{Backwards-chaining} is an important part of verifiability. The Verifier must be able to prove that the proof chain provided by the mobile node has not been chronologically re-ordered. The transaction must therefore be accompanied by a link to the node's chronologically previous transaction. This link must be encrypted, along with the transaction timestamp, to prevent a curious user from monitoring the public blockchain to observe a user's transaction publishing activity. $A$'s copy of the transaction log $P_{An}$ will therefore be in the form:
@@ -89,7 +88,7 @@ $P_{An} = ID_{An}|KL_{AL}[n](ID_{An-1}|ts_A)|T_{An}$
 \null
 To publish $P_{An}$, $A$ must send $P_{An}$ to a miner node, who will add it to its \textit{pending transaction} queue, and send it to other miners in the network to add it to their queues as well. The transaction will then be signed into the next block in the blockchain.
 
-\subsubsection{Key Packets} \label{sssec:key_packets}
+\subsection{Key Packets} \label{sssec:key_packets}
 The key packet is more than simply a list of keys that a mobile node has used to encrypt its transactions; in order to preserve the ``selective in-sequence privacy'' property of OTIT \cite{otit}, a user must be able to choose transactions that he doesn't want others to be able to decrypt. However, in order to simultaneously preserve OTIT's ``privacy protected chronology'' property, the transaction backwards-chaining must not be broken. This is why two separate \textit{Key Lists} are maintained; $KL_{AL}$ is used to encrypt the backwards-chaining link and transaction timestamp, while $KL_{AT}$ encrypts the transaction data. For example, if node $B$ doesn't want to reveal transaction $T_{Bm-1}$, he would reveal the following key packet:
 \\
 
@@ -98,7 +97,7 @@ ${KP_{Bm} = (\{KL_{BL}[m], KL_{BT}[m]\}, KL_{BL}[m-1], \{KL_{BL}[m-2], KL_{BT}[m
 \null
 In this case, $KL_{BT}[m-1]$ has not been included with $KL_{BL}[m-1]$, in order to protect the privacy of this transaction. This may be needed, for example, if node $B$ doesn't want to allow anyone to decrypt any transactions he has created withing 5km of his home, in order to protect his privacy.
 
-\subsubsection{Aborting transactions}
+\subsection{Aborting transactions}
 A node may decide to abort a transaction if it thinks it is in contact with a malicious node. In figure \ref{fig:aborted_transaction}, node $A$ encounters a malicious node $M$, who tries to spoof its identity with $A$. Node $A$ will abort the transaction once it notices that $|ts_A-ts_M| \geq \epsilon_{ts}$, or $|loc_A-loc_M| \geq \epsilon_{loc}$.
 
 To abort the transaction, $A$ terminates the ad-hoc network with node $M$, and won't publish anything onto the blockchain. This means that even if $M$ fabricates some data from $A$ and publishes a transaction onto the blockchain, the matching transaction from $A$ will not be present. Any transaction on the blockchain that do not contain a reference to a valid  alibi transaction will be disregarded during verification.
@@ -109,7 +108,7 @@ To abort the transaction, $A$ terminates the ad-hoc network with node $M$, and w
 \label{fig:aborted_transaction}
 \end{figure}
 
-\subsection{Verification} \label{ssec:verification}
+\section{Verification} \label{ssec:verification}
 \begin{minipage}{0.5\linewidth}
 In the verification stage, a mobile node tries to prove its location to a Verifier node, e.g. a bank. To do this, the mobile node sends the Verifier a number of parameters, as shown in Figure \ref{fig:verify_request}:
 \begin{itemize}[noitemsep,topsep=0pt]

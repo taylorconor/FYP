@@ -1,16 +1,14 @@
+\documentclass[12pt]{report}
+
 \title{Decentralised location proof system}
 
-\documentclass[12pt,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
 
 \usepackage{tikz}
 \usetikzlibrary{calc,arrows}
 \usepackage{enumitem}
 \usepackage{float}
-
-\usepackage{chngcntr}
-\counterwithin{figure}{section}
-
-\renewcommand{\thefigure}{\thesection.\arabic{figure}}
 
 \author{Conor Taylor}
 \date{
@@ -22,22 +20,22 @@
 \begin{document}
 \maketitle
 
-\begin{abstract}
-\end{abstract}
-\newpage
-
 \tableofcontents
 \newpage
 
 \listoffigures
 \newpage
 
+\chapter{Introduction}
 \input{introduction.tex}
-\newpage
+
+\chapter{Background}
 \input{background.tex}
-\newpage
+
+\chapter{Design}
 \input{design.tex}
-\newpage
+
+\chapter{Evaluation}
 \input{evaluation.tex}
 
 \newpage

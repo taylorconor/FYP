@@ -1,5 +1,4 @@
-\section{Background}
-\subsection{Proving your location}
+\section{Proving your location}
 As an increasing amount of personal information is accessible on the internet and therefore on mobile devices, the security that previously existed by requiring physical interaction between humans to transfer sensitive data is lost.
 
 Location proving is a large part of that security. There is currently no ubiquitous method of \textit{proving} your location digitally. Many companies, such as Netflix, use GeoIP databases such as MaxMind \cite{maxmind} to determine a users location based on his IP address. This technique is inaccurate and easily bypassable using proxy servers or VPNs.
@@ -8,7 +7,7 @@ One newer, more advanced tecnique of GeoIP location verification is Constraint-B
 
 Better solutions to this problem exist. \textit{Location proof systems} are systems which allow users of the system to \textit{prove} their location to another user. Examples of these are discussed in detail in section \ref{ssec:proof_systems}.
 
-\subsection{Distributed and decentralised systems}
+\section{Distributed and decentralised systems}
 A distributed system is a system which distributes the computation of a task across multiple computers (nodes) connected over a network. These nodes then communicate to complete the task by passing messages over the network \cite{distributed}.
 
 For example, Google search indexes are not computed on just one node, rather on a network of nodes that communicate by sending messages to each other. Google therefore \textit{distributes} the task of calculating search indexes across multiple nodes. This two main advantages; It's far more efficient, because different index calculations can be computed on different nodes at the same time, and it's very scalable, because nodes can be added or removed from the network dynamically, to react to demand.
@@ -35,7 +34,7 @@ I consider a decentralised location proof system to be one where no node is in c
 \label{fig:decentralised_location}
 \end{figure}
 
-\subsection{Existing location proof systems} \label{ssec:proof_systems}
+\section{Existing location proof systems} \label{ssec:proof_systems}
 Location proof systems are expected to be accurate and tamper-proof. For this reason, existing solutions have chosen to use a central authority to issue proofs, or to regulate proof issuance \cite{brassil, luo, khan}.
 
 A hardware technique \cite{brassil}, developed by Brassil et al. of HP Laboratories, operates by supplementing existing WiFi access points (\textit{AP's}) with \textit{femtocells}. A femtocell is a small cellular antenna that connects to a mobile carrier via the Internet. Location verification over the internet is made possible by determining which femtocell a mobile node is connected to as it transfers data via Wi-Fi. This is possible because the central server in the location verification system has access to the mobile operator's user data. This solution requires investment in additional hardware to supplement existing WiFi access points, and requires access to mobile providers' user database to identify users locations (see figure \ref{fig:hp_labs}).
@@ -74,8 +73,8 @@ A system proposed by Khan et al. takes a different approach, by using other user
 \end{center}
 \end{figure}
 
-\subsection{Ad-hoc networks}
+\section{Ad-hoc networks}
 
-\subsection{Blockchain}
+\section{Blockchain}
 
-\subsection{Goals of a decentralised proof system}
+\section{Goals of a decentralised proof system}
