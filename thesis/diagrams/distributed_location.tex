@@ -1,0 +1,19 @@
+\begin{tikzpicture}
+
+\node[draw] (C) at (0,0) {Central node};
+
+\node[draw,style=circle,fill=black] (D1) at (-2,-1) {};
+\node[draw,style=circle,fill=black] (D2) at (0,-1) {};
+\node[draw,style=circle,fill=black] (D3) at (2,-1) {};
+
+\draw[-] (C) -- (D1) (C) -- (D2) (C) -- (D3);
+
+\node[draw,style=circle] (N1) at (-2.5,-2) {};\node[draw,style=circle] (N2) at (-1.5,-2) {};
+\node[draw,style=circle] (N3) at (1.5,-2) {};
+
+\draw[-] (N1) -- (D1) (N2) -- (D1) (N3) -- (D3);
+
+\node[draw,style=circle,fill=black,label=right:Worker node] (L1) at (-1.5,-3) {};
+\node[draw,style=circle,label=right:User node] (L2) at (-1.5,-3.5) {};
+
+\end{tikzpicture}

@@ -64,7 +64,7 @@ After nodes agree upon the parameters of the transaction, they exchange their pr
 Once nodes have exchanged \textit{Key Packets}, their communication is finished and they can close their ad-hoc channel. Each node creates a new transaction object, $T$, to publish onto the public blockchain. The following transaction data will be calculated by node $A$, after communicating with node $B$:
 \\
 
-$T_{An} = KL_{AT}[n](ts|loc|ID_{An}|KP_{Bm})$
+$T_{An} = KL_{AT}[n](ts|loc|ID_{An}|ID_{Bm}|KP_{Bm})$
 \\
 
 Where:
@@ -74,6 +74,7 @@ Where:
 	\item[] $\mathbf{ts}$ is the timestamp of the transaction, as recorded by node $A$.
 	\item[] $\mathbf{loc}$ is the GPS coordinates of the transaction, as recorded by node $A$.
 	\item[] $\mathbf{ID_{An}}$ is $A$'s $nth$ identity, used for this transaction only.
+	\item[] $\mathbf{ID_{Bm}}$ is $B$'s $mth$ identity.
 	\item[] $\mathbf{KP_{Bm}}$ is $B$'s \textit{Key Packet} at time $m$. Its exact contents are discussed in more detail in section \ref{sssec:key_packets}
 \end{itemize}
 
