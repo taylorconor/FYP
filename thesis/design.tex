@@ -1,4 +1,4 @@
-The location proof system we propose allows \textit{mobile nodes} to create location proofs for each other after physically meeting. When two mobile nodes are in close physical proximity, they initiate a transaction over a short range, ad-hoc network such as Bluetooth.
+The location proof system I propose allows \textit{mobile nodes} to create location proofs for each other after physically meeting. When two mobile nodes are in close physical proximity, they initiate a transaction over a short range, ad-hoc network such as Bluetooth.
 
 To create a transaction, two mobile nodes anonymously share their GPS coordinates and current time over a short-range network. Both nodes then check that these parameters don't differ by more than some value $\epsilon$. Once satisfied, they each create an encrypted, privacy-protecting transaction logging their location and the identity of the other mobile node (the \textit{alibi}) used to create the transaction. This transaction is published onto a public, append-only bulletin board known as a \textit{blockchain} \cite{blueprint}.
 
@@ -46,6 +46,17 @@ During a transaction between two nodes, a number of different items must be shar
 \caption{Honest, successful transaction}
 \label{fig:transaction}
 \end{figure}
+
+\begin{itemize}
+	\item[] \textbf{(1)} Before the transaction begins, both nodes generate a new entry in their nonce list, and generate a new identity from that nonce.
+	\item[] \textbf{(2)} Node A sends its identity to Node B, along with its observed current timestamp $ts_A$ and current GPS location $loc_A$.
+	\item[] \textbf{(3)} Node B verifies that the observed timestamp and GPS location received from Node A are within an acceptable difference from its own observations. This difference is defined by some system constant $\epsilon$.
+	\item[] \textbf{(4)} If Node B verifies the parameters received from Node A, it will respond with its own identity and observations for A to verify.
+	\item[] \textbf{(5)} Node A verifies that the parameters received from B differ by no more than $\epsilon$ from its own observed parameters.
+	\item[] \textbf{(6)} Node A sends $KP_{An}$, its $nth$ \textit{Key Packet}. Key Packets are used to provide alibi credibility, and are discussed in section \ref{sssec:key_packets}.
+	\item[] \textbf{(7)} B responds with its own Key Packet.
+	\item[] \textbf{(8)} Both nodes generate their own transaction $T$, using their alibi's Key Packets. These are then published onto the public blockchain.
+\end{itemize}
 
 Where:
 \begin{itemize}[noitemsep,topsep=0pt]

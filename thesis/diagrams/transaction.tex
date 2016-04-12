@@ -21,6 +21,15 @@
 \coordinate (BF_L) at (7.75,0);
 \coordinate (BF_R) at (8.25,0);
 
+\coordinate (L_1) at (13,9.25);
+\coordinate (L_2) at (13,8.25);
+\coordinate (L_3) at (13,7.25);
+\coordinate (L_4) at (13,6.25);
+\coordinate (L_5) at (13,5.25);
+\coordinate (L_6) at (13,4);
+\coordinate (L_7) at (13,2.5);
+\coordinate (L_8) at (13,1);
+
 \draw[thick] (A_1)--(A_2) (A_3)--(A_8) (A_9)--(A_10) (A_11)--(A_12) (AF_L)--(AF_R);
 \draw[thick] (B_1)--(B_2) (B_3)--(B_8) (B_9)--(B_10) (B_11)--(B_12) (BF_L)--(BF_R);
 \draw (A_1) node[above]{\Large Node $A$};
@@ -63,12 +72,22 @@
 	{$ID_{Bm-1}|KP_{Bm}$};
 
 \draw (A_10) node[below,text centered]{\begin{tabular}{r}
-\small{\textit{$T_{An}$ = $KL_{AL}[n](ts|loc|ID_{An}|ID_{Bm}|KP_{Bm})$}}\\
-\small{\textit{publish $ID_{An}|KL_{AT}[n](ID_{An-1}|ts_A)|T_{An}$}}
+\small{\textit{calculate $T_{An}$}}\\
+\small{\textit{publish $P_{An}$}}
 \end{tabular}};
 
 \draw (B_10) node[below,text centered]{\begin{tabular}{r}
-\small{\textit{$T_{Bm}$ = $KL_{BL}[m](ts|loc|ID_{Bm}|ID_{An}|KP_{An})$}}\\
-\small{\textit{publish $ID_{Bm}|KL_{BT}[m](ID_{Bm-1}|ts_B)|T_{Bm}$}}
+\small{\textit{calculate $T_{Bm}$}}\\
+\small{\textit{publish $P_{Bm}$}}
 \end{tabular}};
+
+\draw (L_1) node {(1)};
+\draw (L_2) node {(2)};
+\draw (L_3) node {(3)};
+\draw (L_4) node {(4)};
+\draw (L_5) node {(5)};
+\draw (L_6) node {(6)};
+\draw (L_7) node {(7)};
+\draw (L_8) node {(8)};
+
 \end{tikzpicture}

@@ -1,3 +1,8 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+
+\begin{document}
 \begin{tikzpicture}[every node/.style={draw,shape=circle,fill=black}]
 
 \node[fill=red,line width=1mm,draw=orange] (A) at (0,0) {};
@@ -6,14 +11,9 @@
 
 \draw (A) -- (B) (B) -- (C);
 
-\only<2> {
-\draw[->] (0.5,2) -- (0.5,0);
-}
-
-\onslide<3->{
-\node[fill=blue] (D) at (5,1) {};
-\node[fill=blue] (E) at (5,2) {};
-\node[fill=blue] (F) at (5,3) {};
+\node[fill=blue] (D) at (4,1) {};
+\node[fill=blue] (E) at (4,2) {};
+\node[fill=blue] (F) at (4,3) {};
 
 \draw (A) -- (D) (D) -- (E) (E) -- (F);
 
@@ -28,14 +28,6 @@
 \node[fill=blue] (L) at (1,5) {};
 
 \draw (C) -- (J) (J) -- (K) (K) -- (L);
-}
-
-\onslide<4->{
-\node (M) at (-4,3) {};
-\node (N) at (-4,4) {};
-\node (O) at (-4,5) {};
-
-\draw (G) -- (M) (M) -- (N) (N) -- (O);
 
 \node (P) at (-1,4) {};
 \node (Q) at (-1,5) {};
@@ -61,29 +53,17 @@
 
 \draw (L) -- (Y) (Y) -- (Z) (Z) -- (AA);
 
-\node (AB) at (3,4) {};
-\node (AC) at (3,5) {};
-\node (AD) at (3,6) {};
-
-\draw (J) -- (AB) (AB) -- (AC) (AC) -- (AD);
-
-\node (AE) at (4,3) {};
-\node (AF) at (4,4) {};
-\node (AG) at (4,5) {};
+\node (AE) at (3,3) {};
+\node (AF) at (3,4) {};
+\node (AG) at (3,5) {};
 
 \draw (E) -- (AE) (AE) -- (AF) (AF) -- (AG);
 
-\node (AH) at (6,4) {};
-\node (AI) at (6,5) {};
-\node (AJ) at (6,6) {};
+\node (AH) at (5,4) {};
+\node (AI) at (5,5) {};
+\node (AJ) at (5,6) {};
 
 \draw (F) -- (AH) (AH) -- (AI) (AI) -- (AJ);
 
-\node (AK) at (7,2) {};
-\node (AL) at (7,3) {};
-\node (AM) at (7,4) {};
-
-\draw (D) -- (AK) (AK) -- (AL) (AL) -- (AM);
-}
-
 \end{tikzpicture}
+\end{document}
