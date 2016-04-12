@@ -2,3 +2,18 @@
 Location verification is the process of verifying whether a \textit{node} (computer) is physically present at a location it claims to be. Existing location proof systems attept to use centralised, trusted ``authoritive'' nodes to provide proof of another node's location. These approaches require investment in infrastructure, and are subject to privacy violation and denial of service attacks. This project aims to present a \textit{decentralised} solution to this problem. A decentralised location proof system is a system in which there is no ``authoritive source'' trusted and relied upon to provide and store sensitive location information.
 
 This project describes a decentralised location proof system that is capable of operating on \textit{mobile nodes} (mobile devices). I propose a design in which location proofs are obtained using other untrusted mobile nodes as \textit{alibi's}. Proofs will be created as two mobile nodes communicate over an ad-hoc bluetooth network, transfer encrypted location information, and publish it on a public append-only bulletin board, known as a \textit{blockchain}. The decentralised nature of the system means that there is no single point of failure, no entity controlling the security of every node's location proofs, and no entity capable of violating another node's privacy. This is because in a decentralised system, no node is ``in charge'', and no node has more authority in the system than any other node.
+
+\section{Report outline}
+This report consists of four additional chapters, listed biefly below.
+
+\subsection{Background}
+Chapter 2 begins with a brief introduction to the problem space. A brief explanation of decentralised and distributed networks, as well as the blockchain is then presented, in the context of location proof systems. The chapter closes with an explanation of the design goals defined for this project.
+
+\subsection{Design}
+Chapter 3 explains the design of the decentralised location proof system in detail. It begins with an overview of the entire system, and then details the design of each specific part.
+
+\subsection{Evaluation}
+Chapter 4 presents an evaluation of the system described in the design, with respect to the goals laid out in Chapter 3.
+
+\subsection{Future work}
+Chapter 5 presents the conclusions of the project, and details interesting areas for possible future work relating to the project.

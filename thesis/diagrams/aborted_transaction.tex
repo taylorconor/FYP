@@ -20,13 +20,13 @@
 \draw (B_1) node[above]{\Large Malicious node $M$};
 
 \draw (A_2) node[below,text centered]{\begin{tabular}{r}
-\small{\textit{generate $NL_A[n]$, $ID_{An} = K^{+}_A(NL_A[n])$}}
+\small{\textit{generate $NL_A[n]$, $ID_{A}[n] = K^{+}_A(NL_A[n])$}}
 \end{tabular}};
 
 \coordinate (AX_1) at ($(A_3)-(0,0.5)$);
 \coordinate (BX_1) at ($(B_3)-(0,1)$);
 \draw[->] (AX_1) -- (BX_1) node[midway,below]
-	{$T_{req}$: $ID_{An} | ts_A | loc_A$};
+	{$T_{req}$: $ID_{A}[n] | ts_A | loc_A$};
 
 \coordinate (AX_2) at ($(A_3)-(0,3)$);
 \coordinate (BX_2) at ($(B_8)-(0,1)$);

@@ -21,14 +21,14 @@
 \coordinate (BF_L) at (7.75,0);
 \coordinate (BF_R) at (8.25,0);
 
-\coordinate (L_1) at (13,9.25);
-\coordinate (L_2) at (13,8.25);
-\coordinate (L_3) at (13,7.25);
-\coordinate (L_4) at (13,6.25);
-\coordinate (L_5) at (13,5.25);
-\coordinate (L_6) at (13,4);
-\coordinate (L_7) at (13,2.5);
-\coordinate (L_8) at (13,1);
+\coordinate (L_1) at (12.5,9.3);
+\coordinate (L_2) at (12.5,8.15);
+\coordinate (L_3) at (12.5,7.25);
+\coordinate (L_4) at (12.5,6.15);
+\coordinate (L_5) at (12.5,5.25);
+\coordinate (L_6) at (12.5,4);
+\coordinate (L_7) at (12.5,2.35);
+\coordinate (L_8) at (12.5,0.9);
 
 \draw[thick] (A_1)--(A_2) (A_3)--(A_8) (A_9)--(A_10) (A_11)--(A_12) (AF_L)--(AF_R);
 \draw[thick] (B_1)--(B_2) (B_3)--(B_8) (B_9)--(B_10) (B_11)--(B_12) (BF_L)--(BF_R);
@@ -36,17 +36,17 @@
 \draw (B_1) node[above]{\Large Node $B$};
 
 \draw (A_2) node[below,text centered]{\begin{tabular}{r}
-\small{\textit{generate $NL_A[n]$, $ID_{An} = K^{+}_A(NL_A[n])$}}
+\small{\textit{generate $NL_A[n]$, $ID_{A}[n] = K^{+}_A(NL_A[n])$}}
 \end{tabular}};
 
 \draw (B_2) node[below,text centered]{\begin{tabular}{r}
-\small{\textit{generate $NL_B[n]$, $ID_{Bn} = K^{+}_B(NL_B[n])$}}
+\small{\textit{generate $NL_B[n]$, $ID_{B}[n] = K^{+}_B(NL_B[n])$}}
 \end{tabular}};
 
 \coordinate (AX_1) at ($(A_3)-(0,0.5)$);
 \coordinate (BX_1) at ($(B_3)-(0,1)$);
 \draw[->] (AX_1) -- (BX_1) node[midway,below]
-	{$T_{req}$: $ID_{An} | ts_A | loc_A$};
+	{$T_{req}$: $ID_{A}[n] | ts_A | loc_A$};
 	
 \draw (B_8) node[below,text centered]{\begin{tabular}{r}
 \small{\textit{verify $|ts_A-ts_B| < \epsilon_{ts}$, $|loc_A-loc_B| < \epsilon_{loc}$}}
@@ -55,7 +55,7 @@
 \coordinate (AX_2) at ($(A_3)-(0,3)$);
 \coordinate (BX_2) at ($(B_8)-(0,1)$);
 \draw[->] (BX_2) -- (AX_2) node[midway,below]
-	{$T_{res}$: $ID_{Bm} | ts_B | loc_B$};
+	{$T_{res}$: $ID_{B}[m] | ts_B | loc_B$};
 	
 \draw (A_8) node[below,text centered]{\begin{tabular}{r}
 \small{\textit{verify $|ts_A-ts_B| < \epsilon_{ts}$, $|loc_A-loc_B| < \epsilon_{loc}$}}
@@ -64,12 +64,12 @@
 \coordinate (AX_3) at ($(A_9)-(0,0.5)$);
 \coordinate (BX_3) at ($(B_9)-(0,3)$);
 \draw[->] (AX_3) -- (BX_3) node[midway,below]
-	{$ID_{An-1}|KP_{An}$};
+	{$KP_{An}$};
 
 \coordinate (AX_4) at ($(A_9)-(0,2.5)$);
 \coordinate (BX_4) at ($(B_9)-(0,4)$);
 \draw[->] (BX_4) -- (AX_4) node[midway,below]
-	{$ID_{Bm-1}|KP_{Bm}$};
+	{$KP_{Bm}$};
 
 \draw (A_10) node[below,text centered]{\begin{tabular}{r}
 \small{\textit{calculate $T_{An}$}}\\

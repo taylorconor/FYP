@@ -1,5 +1,5 @@
 \section{Proving your location}
-As an increasing amount of personal information is accessible on the internet and therefore on mobile devices, we are losing the security that previously existed by requiring physical interaction between humans to transfer sensitive data
+As an increasing amount of personal information is accessible on the internet and therefore on mobile devices, we are losing the security that previously existed by requiring physical interaction between humans to transfer sensitive data.
 
 Location proof is a large part of that security. There is currently no ubiquitous method of \textit{proving} your location at a given time digitally. Many companies, such as Netflix, use GeoIP databases such as MaxMind \cite{maxmind} to estimate a users location based on his IP address. This technique is inaccurate and easily bypassable using proxy servers or VPNs.
 
@@ -65,9 +65,11 @@ Luo et al. propose a system that uses software installed on Wi-Fi access points 
 Users can request a location proof from any access point, and receive a proof encrypted by the AP with the group signature, as shown in figure \ref{fig:luo_transaction}. This can then be submitted to a Verifier.
 
 \begin{figure}[H]
-\resizebox {\columnwidth} {!} {\input{diagrams/luo_transaction.tex}}
-\caption{Proof encrypted with group signature (Adapted from Luo et al. \cite{luo})}
+\begin{center}
+\resizebox {0.7\columnwidth} {!} {\input{diagrams/luo_transaction.tex}}
+\caption{Proof request with group signature (Adapted from Luo et al. \cite{luo})}
 \label{fig:luo_transaction}
+\end{center}
 \end{figure}
 
 This system creates \textit{proactive} location proofs. A proactive location proof is one which is created before it is needed. The user creates application-independent location proofs, and can use them at a later time with any application(s) he chooses.
@@ -135,7 +137,7 @@ A number of related publications \cite{luo,khan} have identified various potenti
 \begin{itemize}
 	\item[] \textbf{False presence}: A dishonest user tries to obtain a location proof for a false location.
 	\item[] \textbf{Malicious intruders}: A malicious intruder offers to help another user prove a false location, but doesn't prove a false location for himself.
-	\item[] \textbf{Curious users}: A curious user learns another user's identity while the user is acquiring the location proof.
+	\item[] \textbf{Curious users}: A curious user learns another user's identity by monitoring its location proofs.
 	\item[] \textbf{Malicious applications}: The application that the user is proving his location to takes advantage of the user's information.
 	\item[] \textbf{Eavesdroppers}: An eavesdropper intercepts or modifies communication between two honest users.
 	\item[] \textbf{Wormhole attacks}: An attacker records network traffic in one location and replays it in another location (at another time).
