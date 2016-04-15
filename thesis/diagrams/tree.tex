@@ -1,26 +1,30 @@
 \begin{tikzpicture}[every node/.style={draw,shape=circle,fill=black}]
 
-\node[fill=red] (A) at (0,0) {};
-\node[fill=red] (B) at (0,1) {};
-\node[fill=red] (C) at (0,2) {};
+\node[fill=white] (A) at (0,0) {};
+\node[fill=white] (B) at (0,1) {};
+\node[fill=white] (C) at (0,2) {};
 
 \draw (A) -- (B) (B) -- (C);
 
-\node[fill=blue] (D) at (4,1) {};
-\node[fill=blue] (E) at (4,2) {};
-\node[fill=blue] (F) at (4,3) {};
+\node[fill=white,label=right:Requesting node's transactions] (L1) at (-2,-1) {};
+\node[fill=gray,label=right:Requesting node's alibis transactions] (L2) at (-2,-1.5) {};
+\node[fill=black,label=right:Alibi node's alibis transactions] (L3) at (-2,-2) {};
+
+\node[fill=gray] (D) at (4,1) {};
+\node[fill=gray] (E) at (4,2) {};
+\node[fill=gray] (F) at (4,3) {};
 
 \draw (A) -- (D) (D) -- (E) (E) -- (F);
 
-\node[fill=blue] (G) at (-2,2) {};
-\node[fill=blue] (H) at (-2,3) {};
-\node[fill=blue] (I) at (-2,4) {};
+\node[fill=gray] (G) at (-2,2) {};
+\node[fill=gray] (H) at (-2,3) {};
+\node[fill=gray] (I) at (-2,4) {};
 
 \draw (B) -- (G) (G) -- (H) (H) -- (I);
 
-\node[fill=blue] (J) at (1,3) {};
-\node[fill=blue] (K) at (1,4) {};
-\node[fill=blue] (L) at (1,5) {};
+\node[fill=gray] (J) at (1,3) {};
+\node[fill=gray] (K) at (1,4) {};
+\node[fill=gray] (L) at (1,5) {};
 
 \draw (C) -- (J) (J) -- (K) (K) -- (L);
 

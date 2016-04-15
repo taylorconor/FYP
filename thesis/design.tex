@@ -66,7 +66,7 @@ During an exchange between two nodes, a number of different items must be shared
 	\item[] \textbf{(8)} Both nodes generate their own transaction $T$, using their alibi's Key Packets. These are then used to generate $P$, the data published onto the public blockchain.
 \end{itemize}
 
-\subsection{Key Lists}
+\subsection{Key Lists} \label{ssec:key_lists}
 When a node is initialised, it must begin to record two \textit{Key Lists} for itself. A \textit{Key List} is a list of encryption keys previously used for transactions. For example, $KL_{AT}[n]$ and $KL_{AL}[n]$ are the two keys used to encrypt node $A$'s $n$th transaction and matching chronological link, respectively. These \textit{Key Lists} and are assumed to have been initialised and populated before the transaction described in Figure \ref{fig:transaction} begins.
 
 \subsection{Transaction creation}
@@ -109,10 +109,10 @@ ${KP_{Bm} = (\{KL_{BL}[m], KL_{BT}[m]\}, KL_{BL}[m-1], \{KL_{BL}[m-2], KL_{BT}[m
 \null
 In this case, $KL_{BT}[m-1]$ has not been included with $KL_{BL}[m-1]$, in order to protect the privacy of this transaction. This means that a node who received this key packet will not be able to decrypt $B$'s transaction $T_{Bm-1}$, but can still prove that a transaction exists at that time and in the correct sequence, as $B$ will still provide $KL_{BL}[m-1]$. This may be needed, for example, if node $B$ doesn't want to allow anyone to decrypt any transactions he has created within 5km of his home, in order to protect his privacy.
 
-\subsection{Aborting transactions}
-A node may decide to abort a transaction if it thinks it is in contact with a malicious node. In figure \ref{fig:aborted_transaction}, node $A$ encounters a malicious node $M$, who tries to spoof its identity with $A$. Node $A$ will abort the transaction once it notices that $|ts_A-ts_M| \geq \epsilon_{ts}$, or $|loc_A-loc_M| \geq \epsilon_{loc}$.
+\subsection{Aborting exchanges} \label{ssec:aborting_exchanges}
+A node may decide to abort an exchange if it thinks it is in contact with a malicious node. In figure \ref{fig:aborted_transaction}, node $A$ encounters a malicious node $M$, who tries to spoof its identity with $A$. Node $A$ will abort the exchange once it notices that $|ts_A-ts_M| \geq \epsilon_{ts}$, or $|loc_A-loc_M| \geq \epsilon_{loc}$.
 
-To abort the transaction, $A$ terminates the ad-hoc network with node $M$, and won't publish anything onto the blockchain. This means that even if $M$ fabricates some data from $A$ and publishes a transaction onto the blockchain, the matching transaction from $A$ will not be present, so the transaction will be disregarded by any verifiers.
+To abort the exchange, $A$ terminates the ad-hoc network with node $M$, and won't publish anything onto the blockchain. This means that even if $M$ fabricates some data from $A$ and publishes a transaction onto the blockchain, the matching transaction from $A$ will not be present, so $M$'s transaction will be disregarded by any verifiers.
 
 \begin{figure}
 \resizebox {\columnwidth} {!} {\input{diagrams/aborted_transaction.tex}}
@@ -145,12 +145,13 @@ The goal of the verification stage is for the Verifier to either accept or rejec
 \begin{figure}[H]
 \begin{center}
 \resizebox {0.7\columnwidth} {!} {\input{diagrams/tree.tex}}
+\vspace{-3cm}
 \caption{Alibi chain relationship tree}
 \label{fig:tree}
 \end{center}
 \end{figure}
 
-In this figure, the red chain is the requesting node's transaction chain. The blue chains are the red node's alibis' transaction chains, and the black chains are the blue node's alibis' transaction chains. If the verifier wishes to recurse more, it could inspect the black node's alibis' transaction chains. Note that this is a simple example, and $n = 3$, the length of the transaction chain subset provided for verification. In reality $n$ should be much larger.
+If the verifier wishes to recurse more, it could inspect the black node's alibis' transaction chains. Note that this is a simple example, and $n = 3$, the length of the transaction chain subset provided for verification. In reality $n$ should be much larger.
 
 The Verifier uses $NP_{An-1}$ and $K^{+}_A$ to prove that node $A$ was the author of all of the transactions he claims to be. This prevents a collusion attack whereby nodes could share common transactions between different proof chains. When walking chronologically backwards along $A$'s proof chain, the 3rd party will ensure that the ID used in transaction $m$ on the proof chain matches $K^{+}_A(NP_{An-1}[m])$.
 

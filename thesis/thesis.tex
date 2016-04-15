@@ -20,6 +20,7 @@
 }
 
 \begin{document}
+\pagenumbering{roman}
 \maketitle
 
 \tableofcontents
@@ -28,19 +29,20 @@
 \listoffigures
 \newpage
 
-\chapter{Introduction}
+\pagenumbering{arabic}
+\chapter{Introduction} \label{ch:introduction}
 \input{introduction.tex}
 
-\chapter{Background}
+\chapter{Background} \label{ch:background}
 \input{background.tex}
 
-\chapter{Design}
+\chapter{Design} \label{ch:design}
 \input{design.tex}
 
-\chapter{Evaluation}
+\chapter{Evaluation} \label{ch:evaluation}
 \input{evaluation.tex}
 
-\chapter{Future work}
+\chapter{Future work} \label{ch:future_work}
 
 \newpage
 \begin{thebibliography}{9}
