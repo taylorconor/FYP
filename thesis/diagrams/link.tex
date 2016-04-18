@@ -1,0 +1,23 @@
+\begin{tikzpicture}[>=latex]
+
+\node[draw] (A1) at (7,0) {$T_m$};
+\node[draw,left=0mm of A1] (A2) {$L_m$};
+
+\node[draw,fill=gray] (B1) at (4,0) {$T_{m-1}$};
+\node[draw,left=0mm of B1] (B2) {$L_{m-1}$};
+
+\node[draw] (C1) at (1,0) {$T_{m-2}$};
+\node[draw,left=0mm of C1] (C2) {$L_{m-2}$};
+
+\draw[->] ($(A2.west)!0.4!(A2.center)$) -- (B1);
+\draw[->] ($(B2.west)!0.2!(B2.center)$) -- (C1);
+
+\node (T) at (7.35,-1) {\tiny{$KL_{BT}[m]$}};
+\node (L) at (5.9,-1) {\tiny{$KL_{BL}[m]$}};
+\draw[->] (L) -- (A2.south);
+\draw[->] (T) -- (A1.south);
+
+\node (L2) at (2.75,-1) {\tiny{$KL_{BL}[m-1]$}};
+\draw[->] (L2) -- (B2.south);
+
+\end{tikzpicture}

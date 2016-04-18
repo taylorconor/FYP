@@ -1,11 +1,17 @@
 \begin{tikzpicture}
 \coordinate (A_1) at (0,6);
 \coordinate (A_2) at (0,0);
+\coordinate (A_BL) at (-0.25,0);
+\coordinate (A_BR) at (0.25,0);
 
 \coordinate (B_1) at (8,6);
 \coordinate (B_2) at (8,1.75);
 \coordinate (B_3) at (8,1);
 \coordinate (B_4) at (8,0);
+\coordinate (B_BL) at (7.75,0);
+\coordinate (B_BR) at (8.25,0);
+
+\draw[-] (A_BL) -- (A_BR) (B_BL) -- (B_BR);
 
 \draw[thick] (A_1)--(A_2);
 \draw[thick] (B_1)--(B_2) (B_3)--(B_4);
