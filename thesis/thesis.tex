@@ -5,6 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{subcaption}
+\usepackage{setspace}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix,positioning,arrows.meta,arrows,calc}
@@ -20,8 +21,21 @@
 }
 
 \begin{document}
+
+\onehalfspacing
+
 \pagenumbering{roman}
 \maketitle
+
+\renewcommand{\abstractname}{Abstract}
+\begin{abstract}
+Location proof systems are systems which allow a user to undeniably prove its location to another user. Existing systems have thus far been designed in a centralised manner, using a trusted central server to provide honest location proofs to users. This presents privacy and reliability issues, as these systems rely on the honesty and availability of the central server. This report presents the design and evaluation of a decentralised location proof system, which overcomes the shortcomings of existing centralised location proof systems.
+\end{abstract}
+
+\renewcommand{\abstractname}{Acknowledgements}
+\begin{abstract}
+I wish to thank my supervisor Stephen Barrett, for his continuous guidance and enthusiasm throughout this project. I would also like to thank Michael Clear for his excellent advice and suggestions, and Douglas Temple for his generous support.
+\end{abstract}
 
 \tableofcontents
 \newpage

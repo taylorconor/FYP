@@ -1,3 +1,5 @@
+This chapter details the design of a decentralised location proof system. It starts with a general overview of the proposed system, before explaining in detail the three major components: Identities (section \ref{sec:identities}), Transactions (section \ref{sec:transactions}), and Verification (section \ref{ssec:verification}).
+
 The location proof system proposed in this project allows \textit{mobile nodes} to create location proofs by initiating an \textit{exchange} with another anonymous mobile node. Mobile nodes, physically moving around, advertise their identity over a short range, ad-hoc network such as bluetooth. When two mobile nodes are in close physical proximity, they initiate an exchange in the background over the ad-hoc network. On completion of the exchange, both nodes can generate their own \textit{transaction}, a cryptographically secure proof of location, attested by the other mobile node (the \textit{alibi}), and make it public.
 
 To create a transaction, two mobile nodes anonymously exchange their GPS coordinates and current timestamp over the ad-hoc network. Both nodes then check that these parameters do not differ from their own observed parameters by more than some value $\epsilon$. Once satisfied, they each create an encrypted, privacy-protecting transaction logging their location and the identity of the the alibi used to create the transaction. This transaction is published onto a public, append-only bulletin board known as a \textit{blockchain} \cite{blueprint}. Once given permission from a mobile node, a \textit{Verifier node} can consult the data in blockchain and determine whether or not the mobile node is present at its claimed location.
@@ -25,7 +27,7 @@ Figure \ref{fig:overview} provides an overview of the operation of the proposed 
 \item The Verifier accepts or rejects the  mobile node's claimed location based on its analysis of the transactions in the blockchain. 
 \end{enumerate}
 
-\section{Identities}
+\section{Identities} \label{sec:identities}
 In order to preserve users' privacy, a user will only ever use an identity for one transaction, before generating a new one. This prevents curious users from watching the public blockchain for a known identity and tracking it. However, to prevent identity theft, it is important for a Verifier to be able to prove that a mobile node is the owner of each identity. This is achieved using a public/private key pair for each mobile node.
 
 When a mobile node first joins the network, it generates a public/private key pair. To maintain anonymity, the mobile node will use the public key to encrypt \textit{nonces} to create \textit{identities}, and use these to identify itself in a transaction. A different identity will be created for each transaction. During the verification stage, a node will provide a Verifier with its public key, along with the list of the nonces used to generate its $n$ most recent transactions (see figure \ref{fig:verify_request}). This allows a Verifier to calculate all of the node's identities, and prove that they were all created by the same node. A Verifier can then retrieve the transactions associated with those identities from the blockchain. Verifiers will also ensure that a node owns the private key associated with its provided public key, to prevent a weak identity attack.
@@ -42,9 +44,8 @@ A \textit{Nonce List} is simply a list of all of the nonces a mobile node has us
 In figure \ref{fig:nonce_list} above, nonce $0047$ is encrypted with $K^+$, a node's public key, to create identity $ee3bc14$. By providing the nonce list and $K^+$, a node can prove that it created all of the identities in the identities list. It must also verify that it owns $K^-$, its private key.
 
 \subsection{Identity duplication}
-Since all identities are generated from random nonces, there is nothing to prevent two nodes from generating the same identity and using it in different transactions. It is therefore possible that during verification, a Verifier node may find multiple transactions with the same ID while searching the blockchain. Verifiers are provided with decryption key from the requesting node for the transactions they are searching for, which will only successfully decrypt one of the transactions with the duplicate ID. A Verifier will try to decrypt each one until it finds the one that can be decrypted successfully.
+Since all identities are generated from random nonces, there is nothing to prevent two nodes from generating the same identity and using it in different transactions. It is therefore possible that during verification, a Verifier node may find multiple transactions with the same ID while searching the blockchain. Verifiers are provided with decryption keys from the requesting node for the transactions they are searching for, which will only successfully decrypt one of the transactions with the duplicate ID. A Verifier will try to decrypt each one until it finds the one that can be decrypted successfully.
 
-\newpage
 \section{Transactions} \label{sec:transactions}
 During an exchange between two nodes, a number of different items must be shared and calculated. Figure \ref{fig:transaction} describes and explains an honest, successful exchange, assuming an ad-hoc network has already been set up between nodes $A$ and $B$.
 
@@ -121,9 +122,9 @@ In this case, $KL_{BT}[m-1]$ has not been included with $KL_{BL}[m-1]$, in order
 \subsection{Aborting exchanges} \label{ssec:aborting_exchanges}
 A node may decide to abort an exchange if it thinks it is in contact with a malicious node. In figure \ref{fig:aborted_transaction}, node $A$ encounters a malicious node $M$, who tries to spoof its location to node $A$. Node $A$ will abort the exchange once it notices that $|loc_A-loc_M| \geq \epsilon_{loc}$.
 
-To abort the exchange, node $A$ terminates the ad-hoc network with node $M$, and won't publish anything onto the blockchain. This means that even if node $M$ fabricates some data from node $A$ and publishes a transaction onto the blockchain, the matching transaction from node $A$ will not be present, so node $M$'s transaction will be disregarded by any Verifiers.
+To abort the exchange, node $A$ terminates the ad-hoc network with node $M$, and will not publish anything onto the blockchain. This means that even if node $M$ fabricates some data from node $A$ and publishes a transaction onto the blockchain, the matching transaction from node $A$ will not be present, so node $M$'s transaction will be disregarded by any Verifiers.
 
-\begin{figure}
+\begin{figure}[H]
 \resizebox {\columnwidth} {!} {\input{diagrams/aborted_transaction.tex}}
 \caption{An aborted transaction due to malicious node $M$}
 \label{fig:aborted_transaction}
@@ -135,21 +136,21 @@ In the verification stage, a mobile node attempts to prove its location to a Ver
 
 \begin{figure}[H]
 \begin{center}
-\resizebox {0.8\columnwidth} {!} {\input{diagrams/verify_request.tex}}
+\resizebox {0.75\columnwidth} {!} {\input{diagrams/verify_request.tex}}
 \caption{Verification request}
 \label{fig:verify_request}
 \end{center}
 \end{figure}
 
 \begin{itemize}[noitemsep,topsep=0pt]
-	\item[] $\mathbf{ID_{A}[n-1]}$ is the ID of node $A$'s most recently published transaction. Note that $ID_A[n]$ has already been generated, but hasn't been used in a transaction yet. Node $A$ has generated it so that it is ready to be used in the next transaction.
+	\item[] $\mathbf{ID_{A}[n-1]}$ is the ID of node $A$'s most recently published transaction. Note that $ID_A[n]$ has already been generated, but has not been used in a transaction yet. Node $A$ has generated it so that it is ready to be used in the next transaction.
 	\item[] $\mathbf{KP_{An-1}}$ is node $A$'s key packet up to transaction $n-1$, and includes keys for as many transactions as node $A$ feels is appropriate in order to receive verification.
 	\item[] $\mathbf{loc}$ is node $A$'s current claimed GPS coordinates for which it is seeking verification.
 	\item[] $\mathbf{NP_{An-1}}$ is node $A$'s \textit{Nonce Packet}, a subset of its \textit{Nonce List} (section \ref{sssec:nonce_list}). A Nonce Packet is the list of the nonces used to generate node $A$'s most recent IDs, up to $n-1$, that node $A$ is willing to share with the Verifier. 
 \end{itemize}
 
 \null
-The goal of the verification stage is for the Verifier to either accept or reject the location that the user is claiming. Given $ID_{A}[n-1]$ and $KP_{An-1}$, a Verifier is able to retrieve node $A$'s previous transactions, and the transactions of all of its alibis. This will allow the Verifier to recursively inspect the transactions of all alibis used in a node's transactions, until it is satisfied that the location can be verified or rejected. This recursive inspection can be visualised as a tree, as shown in figure \ref{fig:tree}.
+The goal of the verification stage is for the Verifier to either accept or reject the location that the user is claiming. Given $ID_{A}[n-1]$ and $KP_{An-1}$, a Verifier is able to retrieve node $A$'s previous transactions, and the transactions of all its alibis. This will allow the Verifier to recursively inspect the transactions of all alibis used in a node's transactions, until it is satisfied that the location can be verified or rejected. This recursive inspection can be visualised as a tree, as shown in figure \ref{fig:tree}.
 
 \begin{figure}[H]
 \begin{center}

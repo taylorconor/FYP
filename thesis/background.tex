@@ -1,20 +1,22 @@
 \section{Proving location}
-As an increasing amount of personal information is accessible on the internet and therefore on mobile devices, the security that previously existed by requiring physical interaction between humans to transfer sensitive data is lost.
+An increasing amount of personal information is accessible on the internet, and therefore on mobile devices. Hence the security that previously existed by requiring physical interaction between humans to transfer sensitive data is lost.
 
-Location proof is a large part of that security. There is currently no ubiquitous method of \textit{proving} a mobile user's location at a given time over the internet. Many companies, such as Netflix, use GeoIP databases such as MaxMind \cite{maxmind} to estimate a user's location based on its IP address. This is a location observation technique rather than a proof. It is therefore inaccurate and easily bypassable using proxy servers or VPNs.
+Location proof is a large part of that security. There is currently no ubiquitous method of \textit{proving} a mobile user's location at a given time over the internet. This problem will become increasingly pronounced as the amount of personal information accessible on the internet increases. For example, banks wishing to reduce fraud may soon benefit from requiring a user to prove its location before logging in to their mobile banking application. A feature like this is impossible without an underlying ubiquitous location proof system.
+
+Many companies, such as Netflix, use GeoIP databases such as MaxMind \cite{maxmind} to estimate a user's location based on its IP address. This is a location observation technique rather than a proof. It is therefore inaccurate and easily bypassable using proxy servers or VPNs.
 
 One newer, more advanced technique of location observation is Constraint-Based Geolocation \cite{constraint-based}. This is an active geolocation technique, compared with GeoIP verification which is static. It estimates the location of a users IP address by calculating the latencies between the user's machine and multiple surrounding machines with fixed, known locations. However, even advanced systems like these can easily be bypassed, using IP spoofing techniques, proxy servers, VPNs, or by using anonymising networks such as TOR \cite{tor}.
 
-Better solutions to this problem exist. \textit{Location proof systems} allow users of the system to \textit{prove} their location to another user, by creating \textit{location proofs}. The structure of a location proof varies from system to system. In essence, a location proof is a piece of data, potentially signed or encrypted by another party, which attests the location of a user at a specific time. Examples of location proof systems are discussed in detail in section \ref{ssec:proof_systems}.
+However, more rigorous solutions to the problem of determining a user's location exist. \textit{Location proof systems} allow users of the system to \textit{prove} their location to another user, by creating \textit{location proofs}. The structure of a location proof varies from system to system. In essence, a location proof is a piece of data, potentially signed or encrypted by another party, which attests the location of a user at a specific time. Examples of location proof systems are discussed in detail in section \ref{ssec:proof_systems}.
 
 \section{Distributed and decentralised systems}
-A \textit{distributed} system is a system which distributes the computation of a task across multiple nodes (computers) connected over a network. These nodes are assigned a task from a central node, and then work together and communicate to complete the task by passing messages to each other over the network \cite{distributed}.
+A \textit{distributed} system is a system which distributes the computation of a task across multiple nodes connected over a network. These nodes are assigned a task from a central node, then proceed to work together and communicate to complete the task by passing messages to each other over the network \cite{distributed}.
 
-For example, Google search indexes are not computed on just one node, rather on a network of nodes that communicate by sending messages to each other. Google therefore \textit{distributes} the task of calculating search indexes across multiple nodes. This has two main advantages; It is less time consuming, because different index calculations can be computed on different nodes at the same time, and it is scalable, because nodes can be added or removed from the network dynamically, to meet demand.
+For example, Google search indexes are not computed on just one node, but rather on a network of nodes that communicate by sending messages to each other. Google therefore \textit{distributes} the task of calculating search indexes across multiple nodes. This has two main advantages: It is less time consuming, because different index calculations can be computed on different nodes at the same time, and it is scalable, because nodes can be added or removed from the network dynamically, to meet demand.
 
-A \textit{decentralised} system is similar to a distributed system, except no node is in charge. Nodes in a decentralised network still communicate by passing messages to each other over the network, but unlike a distributed system, they are not assigned tasks by a central or master node. Bitcoin \cite{bitcoin} is a good example of a large-scale decentralised system. Two nodes in the Bitcoin network can choose to send money between themselves, creating a transaction. They make the details of that transaction public. The two nodes therefore create and publish the transaction without coordination from a central node.
+A \textit{decentralised} system is similar to a distributed system, except there is no central node. Nodes in a decentralised network still communicate by passing messages to each other over the network but, unlike a distributed system, they are not assigned tasks by a central or master node. A well-known example of a large-scale decentralised system is Bitcoin \cite{bitcoin}. Two nodes in the Bitcoin network can choose to send money between themselves, creating a transaction. The transaction details are then made public. The two nodes therefore create and publish the transaction without coordination from a central node.
 
-In the context of this project, a distributed location proof system is considered to be a proof system where the task of facilitating user proof request and creation is distributed across multiple \textit{worker nodes}, which are controlled and coordinated by a central node. This allows a higher volume of proofs to be created concurrently compared with using a single node, while maintaining centralised and simple control over the system. This is shown in figure \ref{fig:distributed_location}.
+In the context of this project, a distributed location proof system is considered to be a proof system where the task of facilitating user proof request and creation is distributed across multiple \textit{worker nodes}. These are controlled and coordinated by a central node. This allows a higher volume of proofs to be created concurrently compared with using a single node, while maintaining centralised and simple control over the system. This is shown in figure \ref{fig:distributed_location}.
 
 \begin{figure}[H]
 \begin{center}
@@ -24,7 +26,7 @@ In the context of this project, a distributed location proof system is considere
 \label{fig:distributed_location}
 \end{figure}
 
-A decentralised location proof system is considered to be one where no node is in charge of controlling or coordinating the system. Nodes can create and publish location proofs between themselves, without the need for a central third party to coordinate their interaction (figure \ref{fig:decentralised_location}). This makes coordination more complex, but means that no node is considered to be ``in charge'' of the system.
+A decentralised location proof system is considered to be one where no central node controls or coordinates the system. Nodes can create and publish location proofs between themselves, without the need for a central third party to coordinate their interaction (figure \ref{fig:decentralised_location}). This makes coordination more complex, but removes the threats associated with using a central node to store and issue location proofs.
 
 \begin{figure}[H]
 \begin{center}
@@ -37,27 +39,27 @@ A decentralised location proof system is considered to be one where no node is i
 \section{Existing location proof systems} \label{ssec:proof_systems}
 Location proof systems are expected to be accurate and tamper-proof. For this reason, existing solutions \cite{brassil, luo, khan} have chosen to use a central authority to issue proofs, or to regulate proof issuance.
 
-A hardware technique \cite{brassil}, developed by Brassil et al. of HP Laboratories, operates by supplementing existing Wi-Fi access points (\textit{AP's}) with \textit{femtocells}. A femtocell \cite{femtocell} is a small cellular antenna that connects to a mobile network operator (such as Vodafone) via the Internet, which allows mobile networks (e.g. networks used for calls and texts) to be extended on demand. Location verification over the internet is made possible by determining which femtocell a mobile node is connected to as it transfers data over Wi-Fi. This is possible because the central server in the location verification system has access to the mobile operator's user data.
+A hardware technique \cite{brassil}, developed by Brassil et al. of HP Laboratories, operates by supplementing existing Wi-Fi access points (\textit{AP's}) with \textit{femtocells}. A femtocell \cite{femtocell} is a small cellular antenna that connects to a mobile network operator (such as Vodafone) via the Internet, which allows mobile networks (e.g. networks used for calls and SMS messages) to be extended on demand. Location verification over the internet is made possible by determining which femtocell a mobile node is connected to as it transfers data over Wi-Fi. This is possible because the central server in the location verification system has access to the mobile operator's user data.
 
-This solution requires investment in additional hardware to supplement existing Wi-Fi access points, and requires access to mobile providers' user databases to identify users' locations (see figure \ref{fig:hp_labs}). Note that the two lines between the user and the AP in figure \ref{fig:hp_labs} indicates that the user is connected to the AP \textit{and} its attached femtocell.
+However, this solution requires investment in additional hardware to supplement existing Wi-Fi access points, and requires access to mobile providers' user databases to identify users' locations (see figure \ref{fig:hp_labs}).
 
 \begin{figure}[H]
 \begin{center}
 \resizebox {0.45\columnwidth} {!} {\includegraphics{diagrams/hp_paper.png}}
-\caption{Hardware-based proof system (Adapted from Brassil et al. \cite{brassil})}
+\caption[Hardware-based proof system]{Hardware-based proof system (Adapted from Brassil et al. \cite{brassil}). Note that the two lines between the user and the AP indicates that the user is connected to the AP \textit{and} its attached femtocell.}
 \label{fig:hp_labs}
 \end{center}
 \end{figure}
 
-The use of a centralised system, as described in figure \ref{fig:hp_labs}, creates security, privacy and vulnerability issues. An attacker who succeeds in compromising the security of the central server can create unlimited false location proofs for itself, or violate the privacy of the users of the system, and potentially track their location. This is because in this system, location proof data resides with the central server. This means that the user has no control over the security of their proofs, and an attacker could seize them. The central system architecture is also vulnerable, in the sense that a resource availability attack such as a DDoS attack \cite{ddos} could render the central architecture unavailable, making location verification unavailable.
+The use of a centralised system, as described in figure \ref{fig:hp_labs}, creates security, privacy and vulnerability issues. An attacker who succeeds in compromising the security of the central server can create unlimited false location proofs for itself, or it can violate the privacy of the users of the system, and potentially track their location. This is because in this system, location proof data resides with the central server. Thus the user has no control over the security of their proofs, and an attacker could seize them. The central system architecture is vulnerable to other problems, such as central node hardware failure, or resource availability attacks. For example, a DDoS attack \cite{ddos} could render the central architecture unavailable, making location verification unavailable.
 \\
 
-Luo et al. propose a system that uses software installed on Wi-Fi access points to allow users to create location proofs \cite{luo}. In their system, each access point is given a \textit{group signature} by a central server, and can sign location proofs for users (figure \ref{fig:luo_diagram}).
+Another approach by Luo et al. proposes a system that uses software installed on Wi-Fi access points to allow users to create location proofs \cite{luo}. In their system, each access point is given a \textit{group signature} by a central server, and can sign location proofs for users (figure \ref{fig:luo_diagram}).
 
 \begin{figure}[H]
 \begin{center}
 \resizebox {0.5\columnwidth} {!} {\includegraphics{diagrams/ap_paper.png}}
-\caption{Distributed proof system on access points (Adapted from Luo et al. \cite{luo})}
+\caption[Distributed proof system on access points]{Distributed proof system on access points (Adapted from Luo et al. \cite{luo})}
 \label{fig:luo_diagram}
 \end{center}
 \end{figure}
@@ -67,7 +69,7 @@ Users can request a location proof from any access point, and receive a proof en
 \begin{figure}[H]
 \begin{center}
 \resizebox {0.65\columnwidth} {!} {\input{diagrams/luo_transaction.tex}}
-\caption{Proof request with group signature (Adapted from Luo et al. \cite{luo})}
+\caption[Proof request with group signature]{Proof request with group signature (Adapted from Luo et al. \cite{luo})}
 \label{fig:luo_transaction}
 \end{center}
 \end{figure}
@@ -79,10 +81,12 @@ The operation of the system shown in figure \ref{fig:luo_transaction} is describ
 \item[] \textbf{(3)} The AP generates a location proof, encrypted with $S_{group}$, the system group signature. This proof now resides with the user, and can be used to prove its location.
 \end{enumerate}
 
-This system creates \textit{proactive} location proofs. A proactive location proof is one which is created before it is needed. The user creates application-independent location proofs, and can use them at a later time with any application(s) it chooses.
+Unlike the system proposed by Brassil et al., this system creates \textit{proactive} location proofs. A proactive location proof is one which is created before it is needed. The user creates application-independent location proofs, and can use them at a later time with any application(s) it chooses. This is essential in a decentralised proof system, where proofs \textit{cannot} be application dependent by definition.
+
+Using a group signature allows the system to be very easily distributed, while still coordinated by a central node. However, a malicious user who attacks the central server and discovers the group signature can create unlimited false proofs for itself.
 \\
 
-A system proposed by Khan et al. takes a different approach, by using other users as witnesses to a location claim \cite{khan}. In this system, a \textit{witness} physically located near the user is used by the central server to verify the user's location claim (figure \ref{fig:witness_paper}). Like the model proposed by Luo et al., this system allows the user to have control over their own privacy, as the user owns the location proof.
+A system proposed by Khan et al. takes a different approach, by using other users as witnesses to a location claim \cite{khan}. In this system, a \textit{witness} who is physically located near the user is used by the central server to verify the user's location claim (figure \ref{fig:witness_paper}). Like the model proposed by Luo et al., this system allows the user to have control over their own privacy, as the user owns the location proof.
 
 \begin{figure}[H]
 \begin{center}
@@ -93,7 +97,9 @@ A system proposed by Khan et al. takes a different approach, by using other user
 \end{figure}
 
 \section{Blockchain}
-In Bitcoin \cite{bitcoin}, the entire transaction history is stored in the \textit{blockchain}. This is a decentralised, append-only ledger (database) \cite{blueprint}. The blockchain is maintained by a network of \textit{miner} nodes competing to collect transactions into a new block, sign that block by solving a difficult puzzle known as a \textit{proof-of-work}, and append it to the ledger. It is used in Bitcoin to enforce consensus; every miner in the network agrees that all blocks in the blockchain are valid, due to the presence of their associated proof-of-work.
+In a decentralised location proof system, location proofs cannot reside solely with the owner, as it would be difficult to detect proof tampering. Instead, existing decentralised systems such as Bitcoin \cite{bitcoin} store data publicly, but encrypt it with a key known only to the owner. In Bitcoin, this is made possible using a \textit{blockchain}, which provides a public, tamper-proof database for the transaction data. A decentralised location proof system can use a blockchain to store location proofs publicly, encrypted with a key known only to the user who created the proofs.
+
+The blockchain is a decentralised, append-only ledger (database) \cite{blueprint}. It is maintained by a network of \textit{miner} nodes competing to collect transactions into a new block, sign that block by solving a difficult puzzle known as a \textit{proof-of-work}, and append it to the ledger. It is used in Bitcoin to enforce consensus; every miner in the network agrees that all blocks in the blockchain are valid, due to the presence of their associated proof-of-work.
 
 A proof-of-work is a solution (a numerical value) to a problem which is computationally expensive to solve, but computationally cheap to verify that the solution is correct. As blocks are added to the blockchain, the amount of work required to generate the proofs-of-work for the entire chain increases. Because proof-of-work solutions also incorporate some information about the previous block in the chain, changing data inside a block in the blockchain would not just require regeneration of the proof-of-work for that block, but for all successive blocks as well. A malicious node attempting to change the transaction history would have to solve proofs-of-work at a greater rate than the rest of the network combined in order to succeed. Therefore the blockchain is tamper-proof, assuming that the majority of the CPU power in the miner network is controlled by  honest miner nodes \cite{bitcoin}.
 
@@ -110,36 +116,36 @@ Once a proof-of-work has been solved, the solution is distributed to all other m
 \end{figure}
 
 \section{Design goals} \label{sec:design_goals}
-Before designing the system, a number of goals must be defined and an attempt made to satisfy them in the design. The design goals of this project are listed below.
+Before designing the system, a number of goals must be defined and an attempt made to satisfy them in the system design. The goals for this project were determined by examining the design goals of previous work \cite{brassil, luo, khan} discussed in section \ref{ssec:proof_systems}, which is considered to be the state of the art. This system must satisfy the same goals as these centralised proof systems, along with an additional goal of decentralisation.
 
 \begin{enumerate}
-	\item The system must be \textit{privacy preserving}. It must not be possible for a malicious user to obtain any additional information from an honest user other than the information the honest user intended to release.
-	\item False location proofs must be detectable. It must be possible to detect any location proofs attempting to prove false information.
 	\item The system must be decentralised, and cannot rely on any central nodes. This is discussed in section \ref{ssec:centralised}.
 	\item The design must conform to the desirable properties defined in OTIT (discussed in section \ref{ssec:otit}).
-	\item The system must not be vulnerable to any known threats (section \ref{ssec:threats}).
+	\item The system must not be vulnerable to any known threats. Threats are identified in previous publications \cite{luo,khan}, which outline potential attacks on location proof systems (section \ref{ssec:threats}).
 \end{enumerate}
 
 \subsection{Central services} \label{ssec:centralised}
-Location proof systems which rely on central nodes, such as those discussed in section \ref{ssec:proof_systems}, have a fundamental weakness. These systems assume that the central node is honest, always available, and cannot be compromised by an attacker. Since the central node is in charge of coordinating the system, compromising it allows an attacker potentially unlimited control over the system. This completely violates a user's privacy, as the central node may contain sensitive information about users and their location, or a means of retrieving sensitive information, such as decryption keys. Users of the system also have to assume that the central node is available at all times, otherwise the system is considered unavailable, or ``down''.
+Location proof systems which rely on central nodes, such as those discussed in section \ref{ssec:proof_systems}, have a fundamental weakness. These systems assume that the central node is honest, always available, and cannot be compromised by an attacker. Since the central node is in charge of coordinating the system, compromising it allows an attacker to potentially take complete control over the system. This destroys the privacy of each user, as the central node may contain sensitive information about users and their location, or a means of retrieving sensitive information, such as decryption keys. Users of the system also have to trust that the central node is always available which, in reality, may not be true.
 
-These problems do not occur in a decentralised location proof system, because no node is considered to be ``in charge''. If no node is in charge, any node(s) can join or leave the network without altering the state of the network, or making any services unavailable. This lack of authority prevents privacy breaches, but presents other issues. System coordination, which is easily maintained by the central node in a centralised system, is now maintained by each participant in the decentralised system, who may or may not all be honest.
+These problems do not occur in a decentralised location proof system, because all nodes have an equal level of authority. Any node(s) can join or leave the network without altering the state of the network, or without making any services unavailable. This lack of authority prevents privacy breaches, but presents other issues. System coordination, which is easily maintained by the central node in a centralised system, is now maintained by each participant in the decentralised system, who may or may not all be honest.
 
 \subsection{OTIT} \label{ssec:otit}
-Khan et al. present the \textit{OTIT} model, a ``model for designing secure location provenance'' \cite{otit}. It defines the following 8 desirable properties of a location proof system:
+Khan et al. present the \textit{OTIT} model, a ``model for designing secure location provenance'' \cite{otit}. It defines the 8 properties that all location proof systems should satisfy. This project will also aim to satisfy each of these properties, which are defined below.
 \begin{itemize}
 	\item[] \textbf{Chronological}: Location proofs should be ordered according to the sequence of their creation.
 	\item[] \textbf{Order preserving}: The order in which the proofs are entered into the proof chain should always be maintained.
 	\item[] \textbf{Verifiable}: A Verifier should be able to verify or reject the claim by the user that it has visited the given location(s).
 	\item[] \textbf{Tamper evident}: A Verifier should be able to detect if the proof chain has been tampered with or modified by an unauthorised party.
 	\item[] \textbf{Privacy preserved}: When the proof chain is verified for specific location proofs, privacy is preserved for the other location proofs within the chain.
-	\item[] \textbf{Selective In-sequence privacy}: The user should be able to choose not to reveal some location proofs within the proof chain when seeking verification.
+	\item[] \textbf{Selective in-sequence privacy}: The user should be able to choose not to reveal some location proofs within the proof chain when seeking verification.
 	\item[] \textbf{Privacy protected chronology}: The system should ensure that the user does not hide important information from the items within the subset of the proof chain.
 	\item[] \textbf{Convenience and derivability}: The system should ensure that the user does not burden the Verifier with a large amount of data to analyse in order to verify its location.
 \end{itemize}
 
 \subsection{Threats} \label{ssec:threats}
-A number of related publications \cite{luo,khan} have identified various potential threats (or attacks) on location verification systems. These are outlined below.
+A number of related publications \cite{luo,khan} have identified various potential threats (or attacks) on location proof systems. A threat on a location proof system is a potential vulnerability. Threats allow a malicious user (an attacker) to gain an advantage over other users by exploiting weaknesses in the system. In a location proof system, a threat could potentially allow a malicious user to create false proofs for itself, or violate another user's privacy.
+
+This project will first introduce the threats being considered by defining them, then it will describe the proposed model of a decentralised location proof system, and finally analyse the model with respect to each defined threat. The threats considered in this project are a combination of all threats considered by Luo et al. \cite{luo} and Khan et al. \cite{khan} in their centralised location proof system models. These are defined below.
 
 \begin{itemize}
 	\item[] \textbf{False presence}: A dishonest user attempts to obtain a location proof for a false location.
@@ -156,3 +162,5 @@ A number of related publications \cite{luo,khan} have identified various potenti
 	\item[] \textbf{Relay attack}: A malicious user creates a location proof with an honest user by relaying its requests through a colluding \textit{proxy user}, who is physically present at a location that the malicious user wishes to create false proofs at.
 	\item[] \textbf{Sybil attack}: A Sybil attack occurs when a single malicious user of the system generates multiple \textit{pseudoidentities} and masquerades as multiple users \cite{sybil}.
 \end{itemize}
+
+This project aims to design a decentralised location proof system which satisfies the aforementioned requirements as well as addressing and mitigating the threats posed by malicious users to such a system.

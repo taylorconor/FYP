@@ -1,8 +1,8 @@
 \section{Future work}
-There are many worthwhile areas for future work, because to the best of the author's knowledge, this is the first attempted design of a fully decentralised location proof system.
+There are many worthwhile areas for future work, because to the best of the author's knowledge, this is the first attempted design of a fully decentralised location proof system. These are mentioned briefly below.
 
 \subsection{Verification techniques}
-Section \ref{ssec:verification} outlined a number of simple verification techniques that a Verifier node could use to analyse the a proof chain. There is potential for further research on advanced techniques of analysing proof chain trees to determine the validity of a user's proof request.
+Section \ref{ssec:verification} outlined a number of simple verification techniques that a Verifier node could use to analyse a proof chain. There is potential for further research on advanced techniques of analysing proof chain trees to determine the validity of a user's proof request.
 
 \subsection{Privacy and verifiability}
 As explained in section \ref{sssec:key_packets}, certain transactions can be hidden from a proof chain in order to protect a user's privacy, but maintain chronological integrity. There is an interesting area of further work in studying the effect that hiding certain proofs has on that user's verifiability.
@@ -11,6 +11,10 @@ As explained in section \ref{sssec:key_packets}, certain transactions can be hid
 Previous work has indicated that there is no provably correct way of preventing a Sybil attack in a decentralised system \cite{sybil}. However, further work studying strong mitigations against a Sybil attack, or even preventing a Sybil attack entirely, would greatly improve the appeal of a decentralised location proof system, and potentially lead to its ubiquitous use.
 
 \section{Conclusion}
-This project presented the design of a decentralised location proof system. The aim of the project was to design a system that satisfied the design goals, as defined in section \ref{sec:design_goals}. This system satisfies all of the requirements of OTIT \cite{otit}, and all but one of the threats defined in section \ref{ssec:threats}. However, chapter \ref{ch:evaluation} concluded that this Sybil attack threat must be highly targeted to be effective.
+The aim of the project was to design a system that satisfied the design goals, as defined in section \ref{sec:design_goals}. This system satisfies all eight of the desirable properties of a location proof system as defined by OTIT \cite{otit}, and all but one of the threats defined in section \ref{ssec:threats}. However, chapter \ref{ch:evaluation} concluded that this Sybil attack threat must be highly targeted to be effective. Most Sybil attacks can be mitigated against using various techniques, and many simple Sybil attacks will be clearly visible to Verifiers without any mitigation whatsoever.
 
-In conclusion, the model presented in this project is a viable design of a decentralised location proof system, providing that the Sybil attack vulnerability can be heavily mitigated against or prevented outright.
+It is interesting to compare this system to existing centralised location proof systems by Khan et al. \cite{khan} and Luo et al. \cite{luo}. As discussed throughout this project, a decentralised solution to location proof generation is more resilient to attack than these centralised systems by design. However, when compared to both of these systems, the model presented in this project is more resilient against attacks such as wormhole attacks, weak identities and false assertion attacks. This resilience is not due purely to the decentralised nature of the model, but also to interesting properties of the design, such as identity generation.
+
+This project has explained the shortcomings of centralised location proof systems, and it has presented a viable design of a decentralised location proof system, which is to the author's knowledge the first system design of its kind. This decentralised location proof system retains all of the desirable properties of current centralised location proof systems, and is more resilient to attack, as demonstrated during evaluation.
+
+It can therefore be concluded that the advantages of this decentralised location proof system, along with its resilience to attack, make it an excellent candidate for a secure, ubiquitous location proof system.

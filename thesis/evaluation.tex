@@ -1,4 +1,6 @@
-The previous chapter introduced a model for a decentralised location proof system. This chapter will present an evaluation of the model with respect to the design goals defined in section \ref{sec:design_goals}.
+The previous chapter introduced a model for a decentralised location proof system. This chapter will present a case-based evaluation of the model with respect to the design goals defined in section \ref{sec:design_goals}.
+
+In a case-based evaluation, the response of the system model to each \textit{case} (property or threat) is reasoned about. A conclusion is then reached as to the effectiveness of the model in satisfying or defending against each property-based or threat-based case, respectively. Evidence is shown in the form of logical arguments (reasoning) deriving from the definition of each case. This kind of evaluation contrasts a benchmark-based evaluation, where a system implementation is benchmarked against a test suite, because this system is a model rather than an implementation.
 
 \section{OTIT conformance}
 As explained in section \ref{ssec:otit}, the OTIT model \cite{otit} defines 8 desirable properties of a location proof system. The model introduced in chapter \ref{ch:design} is evaluated with respect to OTIT below.
@@ -20,7 +22,7 @@ As a further method of preserving order, each node includes its observed timesta
 \subsection{Verifiable}
 This states that a Verifier should be able to verify or reject the claim by the user that it has visited the given location(s).
 
-The sytem described in chapter \ref{ch:design} inherently satisfies this property of OTIT. Verifier nodes may be operated by banks, employers, or other parties who have a vested interest in allowing their customers or employees to be able to prove their location. These Verifiers can verify or reject a mobile nodes claimed location by examining the nodes chronological link of transactions (as shown in figure \ref{fig:tree}). The Verifier will recursively generate and examine this tree until it can conclude whether or not the transaction chain is valid.
+The system described in chapter \ref{ch:design} inherently satisfies this property of OTIT. Verifier nodes may be operated by banks, employers, or other parties who have a vested interest in allowing their customers or employees to be able to prove their location. These Verifiers can verify or reject a mobile nodes claimed location by examining the nodes chronological link of transactions (as shown in figure \ref{fig:tree}). The Verifier will recursively generate and examine this tree until it can conclude whether or not the transaction chain is valid.
 
 \subsection{Tamper evident}
 The system is tamper evident, meaning that a Verifier is able to detect if the proof chain has been tampered with or modified. If a malicious node creates a successful transaction with an honest node, but modifies the transaction data before publishing, a Verifier node will reject the malicious transaction. This rejection will be on the grounds that the matching transaction, published by the honest node, contains contradictory data.
@@ -37,7 +39,7 @@ To control its privacy, a user can choose only to reveal $KL_{AL}[n]$ for a spec
 \subsection{Selective in-sequence privacy}
 This is the requirement that the user must be able to choose not to reveal certain location proofs within the proof chain when seeking verification. The system satisfies this property by using \textit{Key Packets} (section \ref{sssec:key_packets}).
 
-A \textit{sub-set} of size $m$ of a node $A$'s proof chain, beginning at proof $n$, contains all proofs in the sequence $ID_{A}[n-m]$ to $ID_{A}[n]$. Every transaction in this chain is split into two parts, a transaction data and link data part, and separately encrypted. If a node reveals keys for a Verifier to decrypt all transactions in the sequence $ID_{A}[n-m]$ to $ID_{A}[n]$, it will not be possible for the Verifier to discover transaction $ID_{A}[n-m-1]$, or any transaction outside the sequence $ID_{A}[n-m]$ to $ID_{A}[n]$.
+A \textit{sub-set} of size $m$ of a node $A$'s proof chain, beginning at proof $n$, contains all proofs in the sequence $ID_{A}[n-m]$ to $ID_{A}[n]$. Every transaction in this chain is split into two parts, a transaction data and link data part, which are separately encrypted. If a node reveals keys for a Verifier to decrypt all transactions in the sequence $ID_{A}[n-m]$ to $ID_{A}[n]$, it will not be possible for the Verifier to discover transaction $ID_{A}[n-m-1]$, or any transaction outside the sequence $ID_{A}[n-m]$ to $ID_{A}[n]$.
 
 By encrypting each transaction with a different pair of keys, this system satisfies OTIT's ``selective in-sequence privacy'' property.
 
@@ -47,18 +49,20 @@ This property of OTIT states that the location proof system should ensure that t
 \subsection{Convenience and derivability}
 This requirement states that the system must ensure that the user does not burden the Verifier with a large amount of data to analyse in order to verify the user's location.
 
-In this system, the data is stored in a central blockchain that the Verifier has access to, and the user provides the Verifier  with decryption keys and indexes into just a sub-section of this data. Therefore the data sent to from the user to the Verifier, $KP_{An}$, is quite small in size.
+In this system, the data is stored in a central blockchain that the Verifier has access to. A user provides a Verifier  with decryption keys and indexes for a sub-section of this data. Therefore the data sent from the user to the Verifier, $KP_{An}$, is quite small in size.
 
-The Verifier has the freedom to decide how comprehensively to investigate the users data; It can decide how far to recurse while investigating the tree of alibi relationships. This property of OTIT is therefore satisfied by allowing the Verifier to decide how complex the verification process needs to be.
+Verifiers have the freedom to decide how comprehensively to investigate a user's data; They can decide how far to recurse while investigating the tree of alibi relationships. This property of OTIT is therefore satisfied by allowing Verifiers to decide how complex the verification process needs to be.
 
 \section{Threat analysis}
+Section \ref{ssec:threats} defined a number of threats being considered for this project, which were gathered from existing publications \cite{luo,khan}. The system presented in this project is evaluated against these threats below.
+
 \subsection{False presence}
 In a false presence attack, a dishonest user attempts to obtain a location proof for a false location.
 
-In this system, any dishonest user attempting to obtain a false location proof with an honest alibi will not succeed, as the honest alibi will abort the exchange (see section \ref{ssec:aborting_exchanges}). A dishonest user who publishes a transaction onto the blockchain with a fabricated alibi will also not succeed, as the transaction will be rejected during verification if a Verifier can't find the matching alibi transaction. The system is therefore not vulnerable to a false presence attack.
+In this system, any dishonest user attempting to obtain a false location proof with an honest alibi will not succeed, as the honest alibi will abort the exchange (see section \ref{ssec:aborting_exchanges}). A dishonest user who publishes a transaction onto the blockchain with a fabricated alibi will also not succeed, as the transaction will be rejected during verification if a Verifier cannot find the matching alibi transaction. The system is therefore not vulnerable to a false presence attack.
 
 \subsection{Malicious intruders}
-A malicious intruder offers to help another user to prove a false location, but doesn't prove a false location for itself.
+A malicious intruder offers to help another user to prove a false location, but does not prove a false location for itself.
 
 In the context of this system, a malicious intruder may collude with another user to prove a false location, by acting as an alibi. These transactions will be successfully published onto the blockchain. However, if this user attempts to have its transaction chain verified, a Verifier will quickly notice the lack of credible alibis in the proof chain, indicating malicious activity, and reject the proof request. A sample tree of a node with uncredible alibis is shown in figure \ref{fig:uncredible_tree}. This avoids a malicious intruder vulnerability.
 
@@ -74,7 +78,7 @@ In the context of this system, a malicious intruder may collude with another use
 \subsection{Curious users}
 A curious user is one who learns another users identity by monitoring its location proofs.
 
-Identity discovery is impossible by design in this system. By using a different, seemingly random identity for each transaction, it is impossible for a curious user to determine if two transactions belong to the same user or not. It is therefore impossible for a curious user to learn another user's identity by monitoring location proofs.
+Identity discovery is impossible by design in this system. By using a different, seemingly random identity for each transaction, it is impossible for a curious user to determine if two transactions belong to the same user. It is therefore impossible for a curious user to learn another user's identity by monitoring location proofs.
 
 \subsection{Malicious applications}
 A malicious application is one that tries to take advantage of a user's information as the user seeks verification.
@@ -89,10 +93,14 @@ In a wormhole attack, an attacker records network traffic in one location and re
 
 This attack is not relevant to the system presented in chapter \ref{ch:design}, as this system is decentralised. Any wormhole attack transmissions will simply be ignored by the intended victim.
 
+This result highlights another advantage of modeling a location proof system in a decentralised manner. Luo et al. \cite{luo}, in their model of a centralised location proof system, identified a wormhole attack as a vulnerability of their model, and removed it from scope. Due to the lack of a central authority to fool, the decentralised system proposed in this project is not vulnerable to a wormhole attack by design.
+
 \subsection{Weak identities}
 In a weak identity attack, a user gives its public key or identity to another colluding user in order to create a location proof.
 
-A weak identity attack will not affect this system. Exchanging public keys or identities between colluding users offers no advantage. This is because a Verifier will ensure that any users requesting verification own the private key corresponding to the public key transferred during the verification request (see section \ref{ssec:verification}).
+A weak identity attack will not affect this system. Exchanging public keys or identities between colluding users offers no advantage, as this system does not use fixed identifiers to identify users, rather it uses a seemingly random identity generation technique, as explained in section \ref{sec:identities}. A user will exchange its constant (unchanging) public key when requesting verification, however, a Verifier will check that all requesting users own the private key corresponding to their claimed public key (see section \ref{ssec:verification}). Malicious users attempting a weak identity attack will be unable to spoof a valid private key, assuming the security of the underlying cryptography system.
+
+Luo et al. \cite{luo} identified a weak identity attack as a further weakness in their model. The evaluation above shows that by using a technique for seemingly random identity generation, this system remains invulnerable to a weak identity attack, even in a decentralised setting.
 
 \subsection{False timestamping}
 False timestamping includes backdating and future dating attacks. In a backdating attack, the attacker creates a location proof with a past timestamp. In future dating, the attacker creates a location proof with a future timestamp.
@@ -113,12 +121,14 @@ It is possible in this system for two malicious users to collude as alibis and p
 
 Providing that the system is comprised of a majority of honest nodes, this attack will not succeed. It will be obvious to a Verifier after constructing a graph of the node's alibi transaction (as shown in section \ref{ssec:verification}) that the graph lacks alibi credibility, and therefore two malicious users are likely colluding to create location proofs for themselves. Therefore the system is not vulnerable to this attack.
 
+This is an especially interesting result. The publication that presented this threat case \cite{khan} identified a false assertion attack as a vulnerability in their system, and took it out of scope. This proves that in the case of false assertion, the decentralised model presented in this paper outperforms existing centralised models.
+
 \subsection{Proof switching}
 In a proof switching attack, a malicious user modifies one of its existing honest proofs to spoof a false location.
 
 This is not possible in this system, as the blockchain is used as a tamper-proof method of storing location proofs. Once the proof is included in the blockchain, it cannot be modified.
 
-If the proof has not been added to the blockchain yet, then it is possible for the malicious user to modify it to attempt to spoof a false location. However this attack will not work on this system. Any Verifier will reject the transaction on the grounds that it contains contradictory information to the alibis transaction, which has not been modified.
+If the proof has not been added to the blockchain yet, then it is possible for the malicious user to modify it to attempt to spoof a false location. However this attack will not work on this system. Any Verifier will reject the transaction on the grounds that it contains contradictory information to the alibi's transaction, which has not been modified.
 
 \subsection{Relay attack}
 In a relay attack, a malicious user uses a colluding \textit{proxy user} physically present at the location that the malicious user wishes to create a false proof, to create a location proof with an honest user.
@@ -138,4 +148,7 @@ Introducing a penalty for identity creation would mitigate against an attempted 
 
 Another possible mitigation involves using a web of trust, which  allows users of a system to express their trust of other users \cite{weboftrust}. Users of the system build a large network of trust relationships, allowing other users to assess the trustworthiness of a potential alibi before creating an exchange with it. This technique of mitigating against the Sybil attack would involve a trade-off with the privacy protecting features currently present in the system, because a web of trust requires globally unique, static user identification to operate. This system uses non-unique, dynamic user identification in order to preserve privacy.
 
-Previous research \cite{sybil} has concluded that the only provably correct way of preventing a Sybil attack in a decentralised system is to use a \textit{centralised} name system to coordinate the distribution of identities. Therefore a Sybil attack vulnerability must be taken out of the scope of this system, as this system is focused on a decentralised approach to location verification.
+Previous research \cite{sybil} has concluded that the only provably correct way of preventing a Sybil attack in a decentralised system is to use a \textit{centralised} name system to coordinate the distribution of identities. Therefore a Sybil attack vulnerability must be taken out of the scope of this system, as this system is focused on a decentralised approach to location verification. However, a Sybil attack would have to be highly targeted in order to fool a Verifier into verifying a false location proof chain, due to multiple strong options of mitigation against such an attack.
+
+\null
+The evaluation presented in this chapter shows that despite the current vulnerability to a Sybil attack, this model is a viable design of a decentralised location proof system. This is especially interesting because the model was evaluated against cases used to evaluate centralised proof systems, outperforming them in certain cases.
